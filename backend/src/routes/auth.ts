@@ -14,7 +14,7 @@ authRouter.post('/register', async (req, res) => {
   try {
     const user = await prisma.user.create({ data: req.body })
     await req.logIn(user)
-    res.status(201).end()
+    res.status(201).send({ success: true })
   } catch (error) {
     if (isEmailAlreadyInUseError(error)) {
       res.status(400).send({ message: 'Email already in use.' })
@@ -36,20 +36,20 @@ authRouter.post('/login', async (req, res) => {
     return
   }
   await req.logIn(user)
-  res.status(200).end()
+  res.status(200).send({ success: true })
 })
 
 authRouter.get('/session', (req, res) => {
   if (req.user == null) {
-    res.status(401).end()
+    res.status(401).send({ user: null })
   } else {
-    res.status(200).send(req.user)
+    res.status(200).send({ user: req.user })
   }
 })
 
 authRouter.get('/logout', async (req, res) => {
   await req.logOut()
-  res.status(200).end()
+  res.status(200).send({ success: true })
 })
 
 export default authRouter

@@ -34,11 +34,12 @@ describe('POST /auth/register', () => {
   })
 
   describe('when given a valid email and password', () => {
-    it('responds with 201 status code', async () => {
+    it('responds with JSON and 201 status code', async () => {
       const response = await agent
         .post('/auth/register')
         .send({ name, email, password })
       expect(response.status).toBe(201)
+      expect(response.body).toStrictEqual({ success: true })
     })
 
     it('creates a new user', async () => {
@@ -50,6 +51,16 @@ describe('POST /auth/register', () => {
       expect(user.name).toBe(name)
       expect(user.email).toBe(email)
       expect(user.password).toMatch(/^\$argon2id/)
+    })
+
+    it('creates a valid session', async () => {
+      const register = await agent
+        .post('/auth/register')
+        .send({ name, email, password })
+      expect(register.headers['set-cookie'][0]).toMatch(/connect\.sid/)
+
+      const session = await agent.get('/auth/session')
+      expect(session.status).toBe(200)
     })
   })
 })
@@ -94,17 +105,18 @@ describe('POST /auth/login', () => {
   })
 
   describe('when the user is registered and the password is correct', () => {
-    it('responds with 200 status code and set-cookie header', async () => {
+    it('responds with JSON and 200 status code', async () => {
       const response = await agent.post('/auth/login').send({ email, password })
       expect(response.status).toBe(200)
-      expect(response.headers['set-cookie'][0]).toMatch(/connect\.sid/)
+      expect(response.body).toStrictEqual({ success: true })
     })
 
     it('creates a valid session', async () => {
-      await agent.post('/auth/login').send({ email, password })
+      const login = await agent.post('/auth/login').send({ email, password })
+      expect(login.headers['set-cookie'][0]).toMatch(/connect\.sid/)
 
-      const response = await agent.get('/auth/session')
-      expect(response.status).toBe(200)
+      const session = await agent.get('/auth/session')
+      expect(session.status).toBe(200)
     })
   })
 })
@@ -122,17 +134,20 @@ describe('GET /auth/session', () => {
   })
 
   describe('when not signed in', () => {
-    it('responds with 401 status code', async () => {
+    it('responds with null user and 401 status code', async () => {
       const response = await agent.get('/auth/session')
       expect(response.status).toBe(401)
+      expect(response.body).toStrictEqual({ user: null })
     })
   })
 
   describe('when signed in', () => {
-    it('responds with 200 status code', async () => {
+    it('responds with user and 200 status code', async () => {
       await agent.post('/auth/register').send({ name, email, password })
+      const user = await prisma.user.findUnique({ where: { email } })
       const response = await agent.get('/auth/session')
       expect(response.status).toBe(200)
+      expect(response.body).toStrictEqual({ user })
     })
   })
 })
@@ -155,9 +170,10 @@ describe('GET /auth/logout', () => {
     await prisma.user.deleteMany()
   })
 
-  it('responds with 200 status code', async () => {
+  it('responds with JSON and 200 status code', async () => {
     const response = await agent.get('/auth/logout')
     expect(response.status).toBe(200)
+    expect(response.body).toStrictEqual({ success: true })
   })
 
   it('destroys the session', async () => {
