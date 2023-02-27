@@ -7,14 +7,20 @@ export interface User {
   email: string;
 }
 
-interface Auth {
+export interface Auth {
   user?: User | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   createAccount: (user: { name: string; email: string; password: string }) => Promise<void>;
 }
 
-const AuthContext = createContext({} as Auth);
+const DEFAULT_AUTH_CONTEXT = {} as Auth;
+
+const AuthContext = createContext(DEFAULT_AUTH_CONTEXT);
+
+// Exported with underscores because this is a private context, exported for testing only.
+// The public API consists of the AuthProvider and useAuth hook.
+export { AuthContext as TestAuthContext };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { data: user, mutate } = useSWR<User | null>('/auth/session', async (url) => {

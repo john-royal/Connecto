@@ -53,13 +53,13 @@ export default function CreateAccount() {
     <>
       <div>
         <Typography level="h4" component="h1">
-          Create an Account
+          Create Account
         </Typography>
         <Typography
           endDecorator={
-            <RouterLink to="/sign-in">
-              <Link>Sign In</Link>
-            </RouterLink>
+            <Link component={RouterLink} to="/sign-in">
+              Sign In
+            </Link>
           }
           fontSize="sm"
           sx={{ alignSelf: 'center' }}
@@ -73,15 +73,30 @@ export default function CreateAccount() {
       <form onSubmit={handleSubmit}>
         <FormControl sx={{ mb: 2 }}>
           <FormLabel>Name</FormLabel>
-          <Input name="name" type="text" placeholder="Jane Doe" />
+          <Input
+            name="name"
+            type="text"
+            placeholder="Jane Doe"
+            slotProps={{ input: { 'data-testid': 'name' } }}
+          />
         </FormControl>
         <FormControl sx={{ mb: 2 }}>
           <FormLabel>Email</FormLabel>
-          <Input name="email" type="email" placeholder="johndoe@email.com" />
+          <Input
+            name="email"
+            type="email"
+            placeholder="janedoe@email.com"
+            slotProps={{ input: { 'data-testid': 'email' } }}
+          />
         </FormControl>
         <FormControl sx={{ mb: 2 }}>
           <FormLabel>Password</FormLabel>
-          <Input name="password" type="password" placeholder="•••••" />
+          <Input
+            name="password"
+            type="password"
+            placeholder="•••••"
+            slotProps={{ input: { 'data-testid': 'password' } }}
+          />
         </FormControl>
         <Button type="submit" loading={loading}>
           Create Account

@@ -55,9 +55,9 @@ export default function SignIn() {
         </Typography>
         <Typography
           endDecorator={
-            <RouterLink to="/create-account">
-              <Link>Create Account</Link>
-            </RouterLink>
+            <Link component={RouterLink} to="/create-account">
+              Create an Account
+            </Link>
           }
           fontSize="sm"
           sx={{ alignSelf: 'center' }}
@@ -71,11 +71,21 @@ export default function SignIn() {
       <form onSubmit={handleSubmit}>
         <FormControl sx={{ mb: 2 }}>
           <FormLabel>Email</FormLabel>
-          <Input name="email" type="email" placeholder="johndoe@email.com" />
+          <Input
+            name="email"
+            type="email"
+            placeholder="johndoe@email.com"
+            slotProps={{ input: { 'data-testid': 'email' } }}
+          />
         </FormControl>
         <FormControl sx={{ mb: 2 }}>
           <FormLabel>Password</FormLabel>
-          <Input name="password" type="password" placeholder="•••••" />
+          <Input
+            name="password"
+            type="password"
+            placeholder="•••••"
+            slotProps={{ input: { 'data-testid': 'password' } }}
+          />
         </FormControl>
         <Button type="submit" loading={loading}>
           Sign In
