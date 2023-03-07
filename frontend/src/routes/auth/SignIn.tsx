@@ -7,7 +7,8 @@ import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../lib/auth';
+import AuthLayout from '../../layouts/AuthLayout';
+import { useAuth } from '../../lib/auth';
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -48,7 +49,7 @@ export default function SignIn() {
   };
 
   return (
-    <>
+    <AuthLayout>
       <div>
         <Typography level="h4" component="h1">
           Sign In
@@ -91,6 +92,6 @@ export default function SignIn() {
           Sign In
         </Button>
       </form>
-    </>
+    </AuthLayout>
   );
 }

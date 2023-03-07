@@ -4,10 +4,11 @@ import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import Typography from '@mui/joy/Typography';
 import { Link } from 'react-router-dom';
+import DashboardLayout from '../layouts/DashboardLayout';
 
-function JoinChat(): JSX.Element {
+function StartView(): JSX.Element {
   const card = (
-    <>
+    <Card>
       <CardContent>
         <Typography level="h2" component="div">
           Need help?
@@ -15,16 +16,18 @@ function JoinChat(): JSX.Element {
         <Typography level="h5">Click here to join a support chat!</Typography>
         <ContactSupportIcon sx={{ fontSize: 100, color: '#5e8b8f' }} />
       </CardContent>
-    </>
+    </Card>
   );
 
   return (
-    <Box sx={{ minWidth: 500, minHeight: 245, border: 3, borderColor: '#59606D' }}>
-      <Link to="/chat">
-        <Card variant="outlined">{card}</Card>
-      </Link>
-    </Box>
+    <DashboardLayout>
+      <div className="JoinChat">
+        <Box sx={{ minWidth: 500, minHeight: 245, border: 3, borderColor: '#59606D' }}>
+          <Link to="/chat">{card}</Link>
+        </Box>
+      </div>
+    </DashboardLayout>
   );
 }
 
-export default JoinChat;
+export default StartView;

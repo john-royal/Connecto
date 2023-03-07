@@ -1,37 +1,36 @@
-import CircularProgress from '@mui/joy/CircularProgress';
 import CssBaseline from '@mui/joy/CssBaseline';
 import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles';
 import { PropsWithChildren } from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import AuthLayout from './layouts/AuthLayout';
+import LoadingView from './components/LoadingView';
 import { AuthProvider } from './lib/auth';
-import Chat from './pages/Chat';
-import Start from './pages/Start';
-import CreateAccount from './routes/CreateAccount';
-import SignIn from './routes/SignIn';
+import CreateAccount from './routes/auth/CreateAccount';
+import SignIn from './routes/auth/SignIn';
+import SignOut from './routes/auth/SignOut';
+import ChatView from './routes/ChatView';
+import StartView from './routes/StartView';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Start />,
+    element: <StartView />,
   },
   {
     path: '/chat',
-    element: <Chat />,
+    element: <ChatView />,
   },
   {
-    element: <AuthLayout />,
-    children: [
-      {
-        path: '/sign-in',
-        element: <SignIn />,
-      },
-      {
-        path: '/create-account',
-        element: <CreateAccount />,
-      },
-    ],
+    path: '/sign-in',
+    element: <SignIn />,
+  },
+  {
+    path: '/create-account',
+    element: <CreateAccount />,
+  },
+  {
+    path: '/sign-out',
+    element: <SignOut />,
   },
 ]);
 
@@ -53,21 +52,5 @@ function StylingProvider({ children }: PropsWithChildren) {
         {children}
       </CssVarsProvider>
     </StyledEngineProvider>
-  );
-}
-
-function LoadingView() {
-  return (
-    <div
-      style={{
-        width: '100vw',
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-    >
-      <CircularProgress />
-    </div>
   );
 }

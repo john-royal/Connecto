@@ -7,7 +7,8 @@ import Link from '@mui/joy/Link';
 import Typography from '@mui/joy/Typography';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../lib/auth';
+import AuthLayout from '../../layouts/AuthLayout';
+import { useAuth } from '../../lib/auth';
 
 interface FormElements extends HTMLFormControlsCollection {
   name: HTMLInputElement;
@@ -50,7 +51,7 @@ export default function CreateAccount() {
   };
 
   return (
-    <>
+    <AuthLayout>
       <div>
         <Typography level="h4" component="h1">
           Create Account
@@ -102,6 +103,6 @@ export default function CreateAccount() {
           Create Account
         </Button>
       </form>
-    </>
+    </AuthLayout>
   );
 }

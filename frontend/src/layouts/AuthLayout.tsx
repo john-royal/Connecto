@@ -1,9 +1,9 @@
 import Box from '@mui/joy/Box';
 import Sheet from '@mui/joy/Sheet';
 import Typography from '@mui/joy/Typography';
-import { Outlet } from 'react-router-dom';
+import { ReactNode } from 'react';
 
-export default function AuthLayout() {
+export default function AuthLayout({ children }: { children: ReactNode }) {
   return (
     <Box
       sx={{
@@ -25,7 +25,7 @@ export default function AuthLayout() {
           boxShadow: 'md',
         }}
       >
-        <Outlet />
+        {children}
       </Sheet>
       <Box sx={{ py: 3, textAlign: 'center' }}>
         <Typography sx={{ color: 'GrayText', fontSize: 'small' }}>© 2023 Connecto</Typography>

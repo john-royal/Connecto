@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom/extend-expect';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, useNavigate } from 'react-router-dom';
-import { Auth, TestAuthContext } from '../lib/auth';
+import { Auth, TestAuthContext } from '../../lib/auth';
 import SignIn from './SignIn';
 
 jest.mock('react-router-dom', () => ({
