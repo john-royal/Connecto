@@ -1,31 +1,28 @@
-import React from "react";
-import Box from "@mui/material/Box";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Typography from "@mui/material/Typography";
-import { CardActionArea } from "@mui/material";
-import ContactSupportIcon from "@mui/icons-material/ContactSupport";
+import ContactSupportIcon from '@mui/icons-material/ContactSupport';
+import Box from '@mui/joy/Box';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import Typography from '@mui/joy/Typography';
+import { Link } from 'react-router-dom';
 
 function JoinChat(): JSX.Element {
   const card = (
-    <React.Fragment>
+    <>
       <CardContent>
-        <Typography variant="h2" component="div">
+        <Typography level="h2" component="div">
           Need help?
         </Typography>
-        <Typography variant="h5">Click here to join a support chat!</Typography>
-        <ContactSupportIcon sx={{ fontSize: 100, color: "#5e8b8f" }} />
+        <Typography level="h5">Click here to join a support chat!</Typography>
+        <ContactSupportIcon sx={{ fontSize: 100, color: '#5e8b8f' }} />
       </CardContent>
-    </React.Fragment>
+    </>
   );
 
   return (
-    <Box
-      sx={{ minWidth: 500, minHeight: 245, border: 3, borderColor: "#59606D" }}
-    >
-      <CardActionArea onClick={(event) => (window.location.href = "/chat")}>
+    <Box sx={{ minWidth: 500, minHeight: 245, border: 3, borderColor: '#59606D' }}>
+      <Link to="/chat">
         <Card variant="outlined">{card}</Card>
-      </CardActionArea>
+      </Link>
     </Box>
   );
 }

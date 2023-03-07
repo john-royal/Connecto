@@ -6,14 +6,19 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import AuthLayout from './layouts/AuthLayout';
 import { AuthProvider } from './lib/auth';
+import Chat from './pages/Chat';
+import Start from './pages/Start';
 import CreateAccount from './routes/CreateAccount';
-import Home from './routes/Home';
 import SignIn from './routes/SignIn';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Home />,
+    element: <Start />,
+  },
+  {
+    path: '/chat',
+    element: <Chat />,
   },
   {
     element: <AuthLayout />,

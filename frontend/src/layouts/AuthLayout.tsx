@@ -1,6 +1,6 @@
-import { Typography } from '@mui/joy';
 import Box from '@mui/joy/Box';
 import Sheet from '@mui/joy/Sheet';
+import Typography from '@mui/joy/Typography';
 import { Outlet } from 'react-router-dom';
 
 export default function AuthLayout() {

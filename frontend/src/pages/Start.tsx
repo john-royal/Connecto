@@ -1,6 +1,6 @@
-import "../App.css";
-import Sidebar from "../components/Sidebar";
-import JoinChat from "../components/JoinChat";
+import '../App.css';
+import Sidebar from '../components/Sidebar';
+import JoinChat from '../components/JoinChat';
 
 function Start(): JSX.Element {
   return (
@@ -10,8 +10,8 @@ function Start(): JSX.Element {
           <Sidebar />
         </div>
         <div className="JoinChat">
-            <JoinChat />
-          </div>
+          <JoinChat />
+        </div>
       </div>
     </>
   );

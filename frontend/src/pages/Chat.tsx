@@ -1,6 +1,6 @@
-import "../App.css";
-import Sidebar from "../components/Sidebar";
-import LeaveChat from "../components/LeaveChat";
+import '../App.css';
+import Sidebar from '../components/Sidebar';
+import LeaveChat from '../components/LeaveChat';
 
 function Chat(): JSX.Element {
   return (
