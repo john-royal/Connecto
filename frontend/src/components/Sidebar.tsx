@@ -1,6 +1,6 @@
 import React from "react";
 import "../App.css";
-import { SidebarData } from "./SidebarData.tsx";
+import { SidebarData } from "./SidebarData";
 import Logo from '../img/logo.png'
 
 function Sidebar(): JSX.Element {

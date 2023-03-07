@@ -1,6 +1,6 @@
 import "../App.css";
-import Sidebar from "../components/Sidebar.tsx";
-import JoinChat from "../components/JoinChat.tsx";
+import Sidebar from "../components/Sidebar";
+import JoinChat from "../components/JoinChat";
 
 function Start(): JSX.Element {
   return (
