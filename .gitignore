@@ -1,6 +1,9 @@
 # System files
 .DS_Store
 
+# Local database
+*.db
+
 # Logs
 logs
 *.log
