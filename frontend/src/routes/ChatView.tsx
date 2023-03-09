@@ -14,31 +14,30 @@ function ChatView() {
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
-    // Create a new Socket.io client
     const newSocket = io();
 
-    // Store the socket in state
     setSocket(newSocket);
 
-    // Clean up the socket when the component unmounts
     return () => {
       newSocket.disconnect();
     };
   }, []);
 
   useEffect(() => {
-    // Listen for incoming messages
-    if (socket) {
-      socket.on('message', (data: string) => {
-        setMessages((messages) => [...messages, data]);
-      });
-    }
+    if (!socket) return;
+
+    socket.on('message', (newMessage: string) => {
+      setMessages((messages) => [...messages, newMessage]);
+    });
+
+    return () => {
+      socket.off('message');
+    };
   }, [socket]);
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    // Send a new message to the server
     if (socket && inputValue) {
       socket.emit('message', inputValue);
       setInputValue('');
