@@ -12,7 +12,10 @@ const isEmailAlreadyInUseError = (error: unknown): boolean => {
 
 authRouter.post('/register', async (req, res) => {
   try {
-    const user = await prisma.user.create({ data: req.body })
+    const isAdmin = (await prisma.user.count()) === 0
+    const user = await prisma.user.create({
+      data: Object.assign({}, req.body, { isAdmin })
+    })
     await req.logIn(user)
     res.status(201).send({ success: true })
   } catch (error) {

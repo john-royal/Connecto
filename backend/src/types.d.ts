@@ -8,6 +8,7 @@ declare global {
       PORT: number
       SESSION_SECRET: string
       JWT_SECRET: string
+      CLIENT_URL: string
     }
   }
 

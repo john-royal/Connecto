@@ -1,10 +1,12 @@
 import { createContext, useContext } from 'react';
 import useSWR from 'swr';
+import { SERVER_URL } from './constants';
 
 export interface User {
   id: number;
   name: string;
   email: string;
+  isAdmin: boolean;
 }
 
 export interface Auth {
@@ -28,7 +30,7 @@ const AuthContext = createContext(DEFAULT_AUTH_CONTEXT);
 export { AuthContext as TestAuthContext };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { data: user, mutate } = useSWR<User | null>('/auth/session', async (url) => {
+  const { data: user, mutate } = useSWR<User | null>(`${SERVER_URL}/auth/session`, async (url) => {
     const response = await fetch(url);
     if (response.ok) {
       const body = await response.json();
@@ -39,7 +41,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   });
 
   const signIn = async (email: string, password: string) => {
-    const response = await fetch('/auth/login', {
+    const response = await fetch(`${SERVER_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -54,12 +56,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOut = async () => {
-    await fetch('/auth/logout', { method: 'GET' });
+    await fetch(`${SERVER_URL}/auth/logout`, { method: 'GET' });
     await mutate();
   };
 
   const createAccount = async (user: { name: string; email: string; password: string }) => {
-    const response = await fetch('/auth/register', {
+    const response = await fetch(`${SERVER_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(user),

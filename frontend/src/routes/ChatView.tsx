@@ -7,14 +7,25 @@ import Typography from '@mui/joy/Typography';
 import { Link } from 'react-router-dom';
 import DashboardLayout from '../layouts/DashboardLayout';
 import { io, Socket } from 'socket.io-client';
+import { useAuth, User } from '../lib/auth';
+import { v4 as uuidv4 } from 'uuid';
+import { SERVER_URL } from '../lib/constants';
+
+interface Message {
+  id: string;
+  user: User;
+  content: string;
+  createdAt: Date;
+}
 
 function ChatView() {
+  const { user } = useAuth();
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [messages, setMessages] = useState<string[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
-    const newSocket = io();
+    const newSocket = io(SERVER_URL);
 
     setSocket(newSocket);
 
@@ -26,7 +37,7 @@ function ChatView() {
   useEffect(() => {
     if (!socket) return;
 
-    socket.on('message', (newMessage: string) => {
+    socket.on('message', (newMessage: Message) => {
       setMessages((messages) => [...messages, newMessage]);
     });
 
@@ -38,18 +49,26 @@ function ChatView() {
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (socket && inputValue) {
-      socket.emit('message', inputValue);
-      setInputValue('');
-    }
+    if (!socket || !user) throw new Error('Missing user or socket');
+    if (!inputValue) return;
+
+    socket.emit('message', {
+      id: uuidv4(),
+      user: user,
+      content: inputValue,
+      createdAt: new Date(),
+    });
+    setInputValue('');
   }
 
   return (
     <DashboardLayout sidebarItems={<LeaveChatButton />}>
       <div>
         <ul>
-          {messages.map((message, index) => (
-            <li key={index}>{message}</li>
+          {messages.map(({ id, user, content }) => (
+            <li key={id}>
+              {user.name}: {content}
+            </li>
           ))}
         </ul>
         <form onSubmit={handleSubmit}>
