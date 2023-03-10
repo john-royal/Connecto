@@ -11,7 +11,12 @@ export interface Auth {
   user?: User | null;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  createAccount: (user: { name: string; email: string; password: string }) => Promise<void>;
+  createAccount: (user: {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+  }) => Promise<void>;
 }
 
 const DEFAULT_AUTH_CONTEXT = {} as Auth;

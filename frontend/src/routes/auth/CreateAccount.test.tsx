@@ -43,6 +43,7 @@ describe('CreateAccount', () => {
     expect(screen.getByRole('heading')).toHaveTextContent('Create Account');
     expect(screen.getByTestId('name')).toBeInTheDocument();
     expect(screen.getByTestId('email')).toBeInTheDocument();
+    expect(screen.getByTestId('phone')).toBeInTheDocument();
     expect(screen.getByTestId('password')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Create Account' })).toBeInTheDocument();
   });
@@ -62,6 +63,7 @@ describe('CreateAccount', () => {
     await act(async () => {
       fireEvent.change(screen.getByTestId('name'), { target: { value: 'John Doe' } });
       fireEvent.change(screen.getByTestId('email'), { target: { value: 'john.doe@email.com' } });
+      fireEvent.change(screen.getByTestId('phone'), { target: { value: '8773934448' } });
       fireEvent.change(screen.getByTestId('password'), { target: { value: 'password' } });
       fireEvent.click(screen.getByRole('button', { name: 'Create Account' }));
     });
@@ -70,6 +72,7 @@ describe('CreateAccount', () => {
     expect(auth.createAccount).toHaveBeenCalledWith({
       name: 'John Doe',
       email: 'john.doe@email.com',
+      phone: '8773934448',
       password: 'password',
     });
     await waitFor(() => expect(mockNavigate).toHaveBeenCalledTimes(1));
@@ -90,6 +93,7 @@ describe('CreateAccount', () => {
     await act(async () => {
       fireEvent.change(screen.getByTestId('name'), { target: { value: 'John Doe' } });
       fireEvent.change(screen.getByTestId('email'), { target: { value: 'john.doe@email.com' } });
+      fireEvent.change(screen.getByTestId('phone'), { target: { value: '8773934448' } });
       fireEvent.change(screen.getByTestId('password'), { target: { value: 'password' } });
       fireEvent.click(screen.getByRole('button', { name: 'Create Account' }));
     });

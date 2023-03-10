@@ -13,6 +13,7 @@ import { useAuth } from '../../lib/auth';
 interface FormElements extends HTMLFormControlsCollection {
   name: HTMLInputElement;
   email: HTMLInputElement;
+  phone: HTMLInputElement;
   password: HTMLInputElement;
 }
 
@@ -33,12 +34,13 @@ export default function CreateAccount() {
 
     const name = elements.name.value;
     const email = elements.email.value;
+    const phone = elements.phone.value;
     const password = elements.password.value;
 
     setLoading(true);
     setError('');
 
-    createAccount({ name, email, password })
+    createAccount({ name, email, phone, password })
       .then(() => {
         navigate('/');
       })
@@ -88,6 +90,15 @@ export default function CreateAccount() {
             type="email"
             placeholder="janedoe@email.com"
             slotProps={{ input: { 'data-testid': 'email' } }}
+          />
+        </FormControl>
+        <FormControl sx={{ mb: 2 }}>
+          <FormLabel>Phone Number</FormLabel>
+          <Input
+            name="phone"
+            type="tel"
+            placeholder="+1 (877) 393-4448"
+            slotProps={{ input: { 'data-testid': 'phone' } }}
           />
         </FormControl>
         <FormControl sx={{ mb: 2 }}>

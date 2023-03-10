@@ -4,6 +4,7 @@ import prisma from '../src/prisma'
 
 const name = 'Jane Doe'
 const email = 'janedoe@example.com'
+const phone = '877-393-4448'
 const password = 'password'
 
 describe('POST /auth/register', () => {
@@ -21,13 +22,13 @@ describe('POST /auth/register', () => {
   describe('when the email is already in use', () => {
     beforeEach(async () => {
       // Register a user
-      await prisma.user.create({ data: { name, email, password } })
+      await prisma.user.create({ data: { name, email, phone, password } })
     })
 
     it('responds with 400 status code and message', async () => {
       const response = await agent
         .post('/auth/register')
-        .send({ name, email, password })
+        .send({ name, email, phone, password })
       expect(response.status).toBe(400)
       expect(response.body).toStrictEqual({ message: 'Email already in use.' })
     })
@@ -37,13 +38,13 @@ describe('POST /auth/register', () => {
     it('responds with JSON and 201 status code', async () => {
       const response = await agent
         .post('/auth/register')
-        .send({ name, email, password })
+        .send({ name, email, phone, password })
       expect(response.status).toBe(201)
       expect(response.body).toStrictEqual({ success: true })
     })
 
     it('creates a new user', async () => {
-      await agent.post('/auth/register').send({ name, email, password })
+      await agent.post('/auth/register').send({ name, email, phone, password })
       const user = await prisma.user.findUniqueOrThrow({
         where: { email }
       })
@@ -56,7 +57,7 @@ describe('POST /auth/register', () => {
     it('creates a valid session', async () => {
       const register = await agent
         .post('/auth/register')
-        .send({ name, email, password })
+        .send({ name, email, phone, password })
       expect(register.headers['set-cookie'][0]).toMatch(/connect\.sid/)
 
       const session = await agent.get('/auth/session')
@@ -70,7 +71,7 @@ describe('POST /auth/login', () => {
 
   beforeEach(async () => {
     // Ensure the user is registered, but not signed in
-    await prisma.user.create({ data: { name, email, password } })
+    await prisma.user.create({ data: { name, email, phone, password } })
     const session = await agent.get('/auth/session')
     expect(session.status).toBe(401)
   })
@@ -143,7 +144,7 @@ describe('GET /auth/session', () => {
 
   describe('when signed in', () => {
     it('responds with user and 200 status code', async () => {
-      await agent.post('/auth/register').send({ name, email, password })
+      await agent.post('/auth/register').send({ name, email, phone, password })
       const user = await prisma.user.findUnique({ where: { email } })
       const response = await agent.get('/auth/session')
       expect(response.status).toBe(200)
@@ -159,7 +160,7 @@ describe('GET /auth/logout', () => {
     // Ensure the user is registered and signed in
     const register = await agent
       .post('/auth/register')
-      .send({ name, email, password })
+      .send({ name, email, phone, password })
     const session = await agent.get('/auth/session')
     expect(register.status).toBe(201)
     expect(session.status).toBe(200)
