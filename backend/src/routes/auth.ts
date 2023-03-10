@@ -1,13 +1,13 @@
 import type { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { verify } from 'argon2'
 import { Router } from 'express'
-import prisma from '../prisma'
+import prisma, { type User } from '../prisma'
 
 const authRouter = Router()
 
-const isEmailAlreadyInUseError = (error: unknown): boolean => {
+const isAlreadyInUseError = (error: unknown, field: keyof User): boolean => {
   const e = error as PrismaClientKnownRequestError
-  return e.code === 'P2002' && (e.meta?.target as string[])?.includes('email')
+  return e.code === 'P2002' && (e.meta?.target as string[])?.includes(field)
 }
 
 authRouter.post('/register', async (req, res) => {
@@ -19,8 +19,10 @@ authRouter.post('/register', async (req, res) => {
     await req.logIn(user)
     res.status(201).send({ success: true })
   } catch (error) {
-    if (isEmailAlreadyInUseError(error)) {
+    if (isAlreadyInUseError(error, 'email')) {
       res.status(400).send({ message: 'Email already in use.' })
+    } else if (isAlreadyInUseError(error, 'phone')) {
+      res.status(400).send({ message: 'Phone number already in use.' })
     } else {
       throw error
     }
