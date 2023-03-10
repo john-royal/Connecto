@@ -1,56 +1,56 @@
-import Alert from '@mui/joy/Alert';
-import Button from '@mui/joy/Button';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Link from '@mui/joy/Link';
-import Typography from '@mui/joy/Typography';
-import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import AuthLayout from '../../layouts/AuthLayout';
-import { useAuth } from '../../lib/auth';
+import Alert from '@mui/joy/Alert'
+import Button from '@mui/joy/Button'
+import FormControl from '@mui/joy/FormControl'
+import FormLabel from '@mui/joy/FormLabel'
+import Input from '@mui/joy/Input'
+import Link from '@mui/joy/Link'
+import Typography from '@mui/joy/Typography'
+import { useState } from 'react'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import AuthLayout from '../../layouts/AuthLayout'
+import { useAuth } from '../../lib/auth'
 
 interface FormElements extends HTMLFormControlsCollection {
-  name: HTMLInputElement;
-  email: HTMLInputElement;
-  phone: HTMLInputElement;
-  password: HTMLInputElement;
+  name: HTMLInputElement
+  email: HTMLInputElement
+  phone: HTMLInputElement
+  password: HTMLInputElement
 }
 
 interface CreateAccountFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
+  readonly elements: FormElements
 }
 
 export default function CreateAccount() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const { createAccount } = useAuth();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const { createAccount } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = (e: React.FormEvent<CreateAccountFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const elements = e.currentTarget.elements;
+    const elements = e.currentTarget.elements
 
-    const name = elements.name.value;
-    const email = elements.email.value;
-    const phone = elements.phone.value;
-    const password = elements.password.value;
+    const name = elements.name.value
+    const email = elements.email.value
+    const phone = elements.phone.value
+    const password = elements.password.value
 
-    setLoading(true);
-    setError('');
+    setLoading(true)
+    setError('')
 
     createAccount({ name, email, phone, password })
       .then(() => {
-        navigate('/');
+        navigate('/')
       })
       .catch((error) => {
-        setError(error.message);
+        setError(error.message)
       })
       .finally(() => {
-        setLoading(false);
-      });
-  };
+        setLoading(false)
+      })
+  }
 
   return (
     <AuthLayout>
@@ -115,5 +115,5 @@ export default function CreateAccount() {
         </Button>
       </form>
     </AuthLayout>
-  );
+  )
 }

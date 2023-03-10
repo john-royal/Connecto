@@ -1,15 +1,15 @@
-import Box from '@mui/joy/Box';
-import Sheet from '@mui/joy/Sheet';
-import Typography from '@mui/joy/Typography';
-import { ReactNode } from 'react';
+import Box from '@mui/joy/Box'
+import Sheet from '@mui/joy/Sheet'
+import Typography from '@mui/joy/Typography'
+import { type PropsWithChildren } from 'react'
 
-export default function AuthLayout({ children }: { children: ReactNode }) {
+export default function AuthLayout({ children }: PropsWithChildren) {
   return (
     <Box
       sx={{
         height: '100vh',
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: 'column'
       }}
     >
       <Sheet
@@ -22,14 +22,16 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
           flexDirection: 'column',
           gap: 2,
           borderRadius: 'sm',
-          boxShadow: 'md',
+          boxShadow: 'md'
         }}
       >
         {children}
       </Sheet>
       <Box sx={{ py: 3, textAlign: 'center' }}>
-        <Typography sx={{ color: 'GrayText', fontSize: 'small' }}>© 2023 Connecto</Typography>
+        <Typography sx={{ color: 'GrayText', fontSize: 'small' }}>
+          © 2023 Connecto
+        </Typography>
       </Box>
     </Box>
-  );
+  )
 }

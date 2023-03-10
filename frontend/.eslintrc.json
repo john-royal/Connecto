@@ -16,7 +16,13 @@
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint", "prettier", "react", "react-hooks"],
-  "rules": {},
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/strict-boolean-expressions": [
+      "error",
+      { "allowString": true }
+    ]
+  },
   "settings": {
     "react": {
       "version": "detect"

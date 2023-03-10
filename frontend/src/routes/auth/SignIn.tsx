@@ -1,52 +1,52 @@
-import Alert from '@mui/joy/Alert';
-import Button from '@mui/joy/Button';
-import FormControl from '@mui/joy/FormControl';
-import FormLabel from '@mui/joy/FormLabel';
-import Input from '@mui/joy/Input';
-import Link from '@mui/joy/Link';
-import Typography from '@mui/joy/Typography';
-import { useState } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import AuthLayout from '../../layouts/AuthLayout';
-import { useAuth } from '../../lib/auth';
+import Alert from '@mui/joy/Alert'
+import Button from '@mui/joy/Button'
+import FormControl from '@mui/joy/FormControl'
+import FormLabel from '@mui/joy/FormLabel'
+import Input from '@mui/joy/Input'
+import Link from '@mui/joy/Link'
+import Typography from '@mui/joy/Typography'
+import { useState } from 'react'
+import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import AuthLayout from '../../layouts/AuthLayout'
+import { useAuth } from '../../lib/auth'
 
 interface FormElements extends HTMLFormControlsCollection {
-  email: HTMLInputElement;
-  password: HTMLInputElement;
+  email: HTMLInputElement
+  password: HTMLInputElement
 }
 
 interface SignInFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
+  readonly elements: FormElements
 }
 
 export default function SignIn() {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const { signIn } = useAuth();
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const { signIn } = useAuth()
+  const navigate = useNavigate()
 
   const handleSubmit = (e: React.FormEvent<SignInFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const elements = e.currentTarget.elements;
+    const elements = e.currentTarget.elements
 
-    const email = elements.email.value;
-    const password = elements.password.value;
+    const email = elements.email.value
+    const password = elements.password.value
 
-    setLoading(true);
-    setError('');
+    setLoading(true)
+    setError('')
 
     signIn(email, password)
       .then(() => {
-        navigate('/');
+        navigate('/')
       })
       .catch((error) => {
-        setError(error.message);
+        setError(error.message)
       })
       .finally(() => {
-        setLoading(false);
-      });
-  };
+        setLoading(false)
+      })
+  }
 
   return (
     <AuthLayout>
@@ -93,5 +93,5 @@ export default function SignIn() {
         </Button>
       </form>
     </AuthLayout>
-  );
+  )
 }

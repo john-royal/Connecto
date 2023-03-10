@@ -1,4 +1,4 @@
-import CircularProgress from '@mui/joy/CircularProgress';
+import CircularProgress from '@mui/joy/CircularProgress'
 
 function LoadingView() {
   return (
@@ -8,13 +8,13 @@ function LoadingView() {
         height: '100vh',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center',
+        justifyContent: 'center'
       }}
       data-testid="loading-view"
     >
       <CircularProgress />
     </div>
-  );
+  )
 }
 
-export default LoadingView;
+export default LoadingView
