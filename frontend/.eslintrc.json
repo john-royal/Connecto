@@ -1,34 +1,25 @@
 {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
-        "eslint:recommended",
-        "plugin:react/recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:import/typescript",
-        "plugin:react/jsx-runtime",
-        "plugin:prettier/recommended",
-        "prettier"
-    ],
-    "overrides": [],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "project": "./tsconfig.json",
-        "sourceType": "module"
-    },
-    "plugins": [
-        "react",
-        "@typescript-eslint",
-        "import",
-        "react-hooks",
-        "prettier"
-    ],
-    "rules": {},
-    "settings": {
-        "react": {
-            "version": "detect"
-        }
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime",
+    "standard-with-typescript",
+    "plugin:prettier/recommended"
+  ],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "project": ["./tsconfig.json", "./tsconfig.node.json"],
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "prettier", "react", "react-hooks"],
+  "rules": {},
+  "settings": {
+    "react": {
+      "version": "detect"
     }
+  }
 }
