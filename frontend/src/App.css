@@ -116,7 +116,7 @@ input[type=text] {
   font-size: 15pt;
 }
 
-button[type=submit] {
+.chatInputs button[type=submit] {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -126,10 +126,10 @@ button[type=submit] {
   background-color: white;
 }
 
-button[type=submit]:hover {
-  color: #5e8b8f;
+.chatInputs button[type=submit]:hover {
+  color: #8ec2c7;
 }
 
-button[type=submit]:active {
-  color: #557b7f;
+.chatInputs button[type=submit]:active {
+  color: #3d575a;
 }
