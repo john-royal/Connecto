@@ -14,7 +14,9 @@ function StartView() {
           Need help?
         </Typography>
         <Typography level="h5">Click here to join a support chat!</Typography>
-        <ContactSupportIcon sx={{ fontSize: 100, color: '#5e8b8f' }} />
+        <div className="centerIcon">
+          <ContactSupportIcon sx={{ fontSize: 100, color: '#5e8b8f' }} />
+        </div>
       </CardContent>
     </Card>
   )
@@ -25,12 +27,12 @@ function StartView() {
         <Box
           sx={{
             minWidth: 500,
-            minHeight: 245,
+            minHeight: 200,
             border: 3,
             borderColor: '#59606D'
           }}
         >
-          <Link to="/chat">{card}</Link>
+          <Link to="/chat" style={{ textDecoration: 'none' }}>{card}</Link>
         </Box>
       </div>
     </DashboardLayout>

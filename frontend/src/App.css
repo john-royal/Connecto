@@ -25,7 +25,7 @@ body {
 .SidebarLogo {
   height: auto;
   padding: 0;
-  width: 100%;
+  width: 20%;
 }
 
 .SidebarList .row {
@@ -64,7 +64,8 @@ body {
 
 .JoinChat {
   text-align: center;
-  height: 100vh;
+  align-items: center;
+  height: center;
   width: 100vw;
   display: flex;
   justify-content: center;
@@ -79,4 +80,56 @@ body {
   justify-content: center;
   align-items: center;
   color: black;
+}
+
+.centerIcon {
+  align-items: center;
+}
+
+.chatContainer {
+  position: relative;
+  margin: 10px 10px 10px 10px;
+  padding: 10px 10px 10px 10px;
+  width: 80%;
+  border: 3px solid #59606D;
+  border-radius: 10px;
+}
+
+.chatInputs {
+  position: absolute;
+  bottom: 0;
+  width: 97%;
+  display: flex;
+  height: 10%;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+input[type=text] {
+  position: absolute;
+  bottom: 0;
+  width: 94%;
+  height: 80%;
+  padding: 12px 20px;
+  border: 3px solid #59606D;
+  border-radius: 5px;
+  font-size: 15pt;
+}
+
+button[type=submit] {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 80%;
+  color: #648386;
+  border: 0px;
+  background-color: white;
+}
+
+button[type=submit]:hover {
+  color: #5e8b8f;
+}
+
+button[type=submit]:active {
+  color: #557b7f;
 }

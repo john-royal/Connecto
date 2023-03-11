@@ -1,4 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close'
+import SendIcon from '@mui/icons-material/Send'
 import Box from '@mui/joy/Box'
 import Card from '@mui/joy/Card'
 import CardContent from '@mui/joy/CardContent'
@@ -76,7 +77,7 @@ function ChatView() {
 
   return (
     <DashboardLayout sidebarItems={<LeaveChatButton />}>
-      <div>
+      <div className="chatContainer">
         <ul>
           {messages.map(({ id, user, content }) => (
             <li key={id}>
@@ -84,16 +85,20 @@ function ChatView() {
             </li>
           ))}
         </ul>
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            value={inputValue}
-            onChange={(event) => {
-              setInputValue(event.target.value)
-            }}
-          />
-          <button type="submit">Send</button>
-        </form>
+        <div className="chatInputs">
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(event) => {
+                setInputValue(event.target.value)
+              }}
+            />
+            <button type="submit">
+              <SendIcon sx={{ fontSize: 45 }}/>
+            </button>
+          </form>
+        </div>
       </div>
     </DashboardLayout>
   )
@@ -106,7 +111,9 @@ function LeaveChatButton() {
         <Typography level="h4" component="div">
           Leave Chat
         </Typography>
-        <CloseIcon sx={{ fontSize: 75, color: '#5e8b8f' }} />
+        <div className="centerIcon">
+          <CloseIcon sx={{ fontSize: 75, color: '#5e8b8f' }} />
+        </div>
       </CardContent>
     </Card>
   )
@@ -116,12 +123,12 @@ function LeaveChatButton() {
       <Box
         sx={{
           minWidth: 100,
-          minHeight: 100,
-          border: 3,
-          borderColor: '#59606D'
+          minHeight: 100
         }}
       >
-        <Link to="/">{card}</Link>
+        <Link to="/" style={{ textDecoration: 'none' }}>
+          {card}
+        </Link>
       </Box>
     </div>
   )
