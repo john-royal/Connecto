@@ -11,30 +11,22 @@ datasource db {
 }
 
 model User {
-  id       Int          @id @default(autoincrement())
+  id       Int       @id @default(autoincrement())
   name     String
-  email    String       @unique
-  phone    String       @unique
+  email    String    @unique
+  phone    String    @unique
   password String
-  isAdmin  Boolean      @default(false)
+  isAdmin  Boolean   @default(false)
   messages Message[]
-  threads  UserThread[]
-}
-
-model UserThread {
-  user     User   @relation(fields: [userId], references: [id])
-  userId   Int
-  thread   Thread @relation(fields: [threadId], references: [id])
-  threadId Int
-
-  @@id([userId, threadId])
+  threads   Thread[]
 }
 
 model Thread {
-  id       Int          @id @default(autoincrement())
-  isActive Boolean      @default(true)
-  messages Message[]
-  users    UserThread[]
+  id         Int       @id @default(autoincrement())
+  isActive   Boolean   @default(true)
+  customer   User      @relation(fields: [customerId], references: [id])
+  customerId Int
+  messages   Message[]
 }
 
 model Message {

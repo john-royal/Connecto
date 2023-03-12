@@ -1,16 +1,16 @@
 import type { PrismaClientKnownRequestError } from '@prisma/client/runtime'
 import { verify } from 'argon2'
-import { Router } from 'express'
-import prisma, { type User } from '../prisma'
+import type { Request, Response } from 'express'
+import prisma, { type User } from '../lib/prisma'
 
-const authRouter = Router()
+type Handler = (req: Request, res: Response) => void | Promise<void>
 
 const isAlreadyInUseError = (error: unknown, field: keyof User): boolean => {
   const e = error as PrismaClientKnownRequestError
   return e.code === 'P2002' && (e.meta?.target as string[])?.includes(field)
 }
 
-authRouter.post('/register', async (req, res) => {
+export const register: Handler = async (req, res) => {
   try {
     const isAdmin = (await prisma.user.count()) === 0
     const user = await prisma.user.create({
@@ -27,34 +27,30 @@ authRouter.post('/register', async (req, res) => {
       throw error
     }
   }
-})
+}
 
-authRouter.post('/login', async (req, res) => {
+export const login: Handler = async (req, res) => {
   const { email, password } = req.body
   const user = await prisma.user.findUnique({ where: { email } })
   if (user == null) {
     res.status(401).send({ message: 'Incorrect email.' })
-    return
-  }
-  if (!(await verify(user.password, password))) {
+  } else if (!(await verify(user.password, password))) {
     res.status(401).send({ message: 'Incorrect password.' })
-    return
+  } else {
+    await req.logIn(user)
+    res.status(200).send({ success: true })
   }
-  await req.logIn(user)
-  res.status(200).send({ success: true })
-})
+}
 
-authRouter.get('/session', (req, res) => {
+export const session: Handler = (req, res) => {
   if (req.user == null) {
     res.status(401).send({ user: null })
   } else {
     res.status(200).send({ user: req.user })
   }
-})
+}
 
-authRouter.get('/logout', async (req, res) => {
+export const logout: Handler = async (req, res) => {
   await req.logOut()
   res.status(200).send({ success: true })
-})
-
-export default authRouter
+}

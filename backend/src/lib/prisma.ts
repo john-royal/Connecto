@@ -1,10 +1,9 @@
 import {
   PrismaClient,
-  type User,
-  type UserThread,
-  type Thread,
   type Message,
-  type Session
+  type Session,
+  type Thread,
+  type User
 } from '@prisma/client'
 import { hash } from 'argon2'
 
@@ -18,4 +17,4 @@ prisma.$use(async (params, next) => {
 })
 
 export default prisma
-export type { User, UserThread, Thread, Message, Session }
+export type { User, Thread, Message, Session }
