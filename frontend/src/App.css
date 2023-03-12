@@ -89,7 +89,7 @@ body {
 .chatContainer {
   position: relative;
   margin: 10px 10px 10px 10px;
-  padding: 10px 10px 10px 10px;
+  padding: 10px 5px 10px 5px;
   width: 80%;
   border: 3px solid #59606D;
   border-radius: 10px;
@@ -108,15 +108,17 @@ body {
 .chatInputs input[type=text] {
   position: absolute;
   bottom: 0;
-  width: 94%;
+  width: 90%;
   height: 80%;
   padding: 12px 20px;
   border: 3px solid #59606D;
   border-radius: 5px;
   font-size: 15pt;
+  margin-left: 45px;
+  margin-right: 45px;
 }
 
-.chatInputs button[type=submit] {
+.sendButton button[type=submit] {
   position: absolute;
   bottom: 0;
   right: 0;
@@ -126,10 +128,74 @@ body {
   background-color: white;
 }
 
-.chatInputs button[type=submit]:hover {
+.sendButton button[type=submit]:hover {
   color: #8ec2c7;
 }
 
-.chatInputs button[type=submit]:active {
+.sendButton button[type=submit]:active {
   color: #3d575a;
+}
+
+.attachFileButton button[type=submit] {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 80%;
+  color: #648386;
+  border: 0px;
+  background-color: white;
+}
+
+.attachFileButton button[type=submit]:hover {
+  color: #8ec2c7;
+}
+
+.attachFileButton button[type=submit]:active {
+  color: #3d575a;
+}
+
+.chatMessages {
+  height: 90%;
+  width: 100%;
+  border-radius: 5px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.chatMessages::-webkit-scrollbar {
+  width: 12px;
+}
+
+.chatMessages::-webkit-scrollbar-track {
+  background-color: #d5d5d5;
+  border-radius: 10px;
+}
+
+.chatMessages::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #868b92;
+}
+
+.messageBubble {
+  font-size: 14pt;
+  height: auto;
+  width: fit-content;
+  max-width: 40%;
+  background-color: #C6F1E7;
+  overflow-wrap: break-word; 
+  border: 1px solid #59606D;
+  border-radius: 18px;
+  padding: 8px 14px;
+  list-style-type: none;
+  margin-bottom: 12px;
+  overflow-anchor: bottom;
+}
+
+.messageName {
+  font-size: 10pt;
+  height: auto;
+  width: fit-content;
+  max-width: 40%;
+  overflow-wrap: break-word; 
 }

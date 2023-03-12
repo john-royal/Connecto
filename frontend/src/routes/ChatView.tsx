@@ -1,5 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close'
 import SendIcon from '@mui/icons-material/Send'
+import AttachFileIcon from '@mui/icons-material/AttachFile'
+import Button from '@mui/material/Button'
 import Box from '@mui/joy/Box'
 import Card from '@mui/joy/Card'
 import CardContent from '@mui/joy/CardContent'
@@ -78,15 +80,26 @@ function ChatView() {
   return (
     <DashboardLayout sidebarItems={<LeaveChatButton />}>
       <div className="chatContainer">
-        <ul>
-          {messages.map(({ id, user, content }) => (
-            <li key={id}>
-              {user.name}: {content}
-            </li>
-          ))}
-        </ul>
+        <div className="chatMessages">
+          <ul>
+            {messages.map(({ id, user, content }) => (
+              <>
+                <div className="messageName">{user.name}</div>
+                <div className="messageBubble">
+                  <li key={id}>{content}</li>
+                </div>
+              </>
+            ))}
+          </ul>
+        </div>
         <div className="chatInputs">
           <form onSubmit={handleSubmit}>
+            <div className="attachFileButton">
+              <button type="submit">
+                <AttachFileIcon sx={{ fontSize: 30 }} />
+                <input hidden accept="image/*" multiple type="file" />
+              </button>
+            </div>
             <input
               type="text"
               value={inputValue}
@@ -94,9 +107,11 @@ function ChatView() {
                 setInputValue(event.target.value)
               }}
             />
-            <button type="submit">
-              <SendIcon sx={{ fontSize: 45 }}/>
-            </button>
+            <div className="sendButton">
+              <button type="submit">
+                <SendIcon sx={{ fontSize: 45 }} />
+              </button>
+            </div>
           </form>
         </div>
       </div>
