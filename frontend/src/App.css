@@ -178,6 +178,8 @@ body {
 }
 
 .messageBubble {
+  margin-left: auto;
+  margin-right: 50px;
   font-size: 14pt;
   height: auto;
   width: fit-content;
@@ -193,6 +195,8 @@ body {
 }
 
 .messageName {
+  margin-left: auto;
+  margin-right: 50px;
   font-size: 10pt;
   height: auto;
   width: fit-content;
