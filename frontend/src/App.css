@@ -105,7 +105,7 @@ body {
   margin-bottom: 10px;
 }
 
-input[type=text] {
+.chatInputs input[type=text] {
   position: absolute;
   bottom: 0;
   width: 94%;
