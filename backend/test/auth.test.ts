@@ -17,7 +17,7 @@ describe('POST /auth/register', () => {
     const session = await agent.get('/auth/session')
     expect(logOut.status).toBe(200)
     expect(session.status).toBe(401)
-    await prisma.user.deleteMany()
+    await prisma.user.deleteMany({ where: { email } })
   })
 
   describe('when the email is already in use', () => {
@@ -83,7 +83,7 @@ describe('POST /auth/login', () => {
     const session = await agent.get('/auth/session')
     expect(logOut.status).toBe(200)
     expect(session.status).toBe(401)
-    await prisma.user.deleteMany()
+    await prisma.user.deleteMany({ where: { email } })
   })
 
   describe('when the user is not registered', () => {
@@ -132,7 +132,7 @@ describe('GET /auth/session', () => {
     const session = await agent.get('/auth/session')
     expect(logOut.status).toBe(200)
     expect(session.status).toBe(401)
-    await prisma.user.deleteMany()
+    await prisma.user.deleteMany({ where: { email } })
   })
 
   describe('when not signed in', () => {
@@ -169,7 +169,7 @@ describe('GET /auth/logout', () => {
 
   afterEach(async () => {
     // Delete user
-    await prisma.user.deleteMany()
+    await prisma.user.deleteMany({ where: { email } })
   })
 
   it('responds with JSON and 200 status code', async () => {
