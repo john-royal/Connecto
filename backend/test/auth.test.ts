@@ -1,11 +1,12 @@
+import { faker } from '@faker-js/faker'
 import request from 'supertest'
 import app from '../src'
-import prisma from '../src/prisma'
+import prisma from '../src/lib/prisma'
 
-const name = 'Jane Doe'
-const email = 'janedoe@example.com'
-const phone = '877-393-4448'
-const password = 'password'
+const name = faker.name.fullName()
+const email = faker.internet.email()
+const phone = faker.phone.number()
+const password = faker.internet.password()
 
 describe('POST /auth/register', () => {
   const agent = request.agent(app)
