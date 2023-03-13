@@ -1,48 +1,42 @@
-import type { PrismaClientKnownRequestError } from '@prisma/client/runtime'
-import { verify } from 'argon2'
-import type { Request, Response } from 'express'
-import prisma, { type User } from '../lib/prisma'
+import type { RequestHandler } from 'express'
+import { UserError, UserModel } from '../models/user'
 
-type Handler = (req: Request, res: Response) => void | Promise<void>
-
-const isAlreadyInUseError = (error: unknown, field: keyof User): boolean => {
-  const e = error as PrismaClientKnownRequestError
-  return e.code === 'P2002' && (e.meta?.target as string[])?.includes(field)
-}
-
-export const register: Handler = async (req, res) => {
+export const register: RequestHandler = async (req, res) => {
   try {
-    const isAdmin = (await prisma.user.count()) === 0
-    const user = await prisma.user.create({
-      data: Object.assign({}, req.body, { isAdmin })
-    })
+    const isAdmin = req.body.email === process.env.ADMIN_EMAIL
+    Object.assign(req.body, { isAdmin })
+    const user = await UserModel.create(req.body)
     await req.logIn(user)
     res.status(201).send({ success: true })
   } catch (error) {
-    if (isAlreadyInUseError(error, 'email')) {
-      res.status(400).send({ message: 'Email already in use.' })
-    } else if (isAlreadyInUseError(error, 'phone')) {
-      res.status(400).send({ message: 'Phone number already in use.' })
+    if (error instanceof UserError) {
+      res.status(400).send({ message: error.message })
     } else {
       throw error
     }
   }
 }
 
-export const login: Handler = async (req, res) => {
-  const { email, password } = req.body
-  const user = await prisma.user.findUnique({ where: { email } })
-  if (user == null) {
-    res.status(401).send({ message: 'Incorrect email.' })
-  } else if (!(await verify(user.password, password))) {
-    res.status(401).send({ message: 'Incorrect password.' })
-  } else {
-    await req.logIn(user)
-    res.status(200).send({ success: true })
+export const login: RequestHandler = async (req, res) => {
+  try {
+    const { email, password } = req.body
+    const user = await UserModel.findByEmail(email)
+    if (await user.verifyPassword(password)) {
+      await req.logIn(user)
+      res.status(200).send({ success: true })
+    } else {
+      res.status(401).send({ message: 'Incorrect password.' })
+    }
+  } catch (error) {
+    if (error instanceof UserError) {
+      res.status(400).send({ message: error.message })
+    } else {
+      throw error
+    }
   }
 }
 
-export const session: Handler = (req, res) => {
+export const session: RequestHandler = (req, res) => {
   if (req.user == null) {
     res.status(401).send({ user: null })
   } else {
@@ -50,7 +44,7 @@ export const session: Handler = (req, res) => {
   }
 }
 
-export const logout: Handler = async (req, res) => {
+export const logout: RequestHandler = async (req, res) => {
   await req.logOut()
   res.status(200).send({ success: true })
 }

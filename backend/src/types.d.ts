@@ -21,6 +21,12 @@ declare global {
   }
 }
 
+declare module 'http' {
+  interface IncomingMessage {
+    session: session.Session & Partial<session.SessionData>
+  }
+}
+
 declare module 'express-session' {
   interface SessionData {
     userId: number

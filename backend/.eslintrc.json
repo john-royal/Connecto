@@ -1,27 +1,23 @@
 {
-    "env": {
-        "commonjs": true,
-        "es2021": true,
-        "node": true
-    },
-    "extends": [
-        "standard-with-typescript",
-        "plugin:prettier/recommended"
-    ],
-    "overrides": [],
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "project": "./tsconfig.json"
-    },
-    "plugins": [
-        "prettier"
-    ],
-    "rules": {
-        "@typescript-eslint/no-misused-promises": [
-            "error",
-            {
-                "checksVoidReturn": false
-            }
-        ]
-    }
+  "env": {
+    "commonjs": true,
+    "es2021": true,
+    "node": true
+  },
+  "extends": ["standard-with-typescript", "plugin:prettier/recommended"],
+  "overrides": [],
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["prettier"],
+  "rules": {
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksVoidReturn": false
+      }
+    ]
+  }
 }
