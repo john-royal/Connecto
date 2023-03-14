@@ -10,6 +10,10 @@ declare global {
       JWT_SECRET: string
       CLIENT_URL: string
       TEXTBELT_API_KEY: string
+      AWS_ACCESS_KEY_ID: string
+      AWS_SECRET_ACCESS_KEY: string
+      AWS_REGION: string
+      AWS_SES_SENDER: string
       ADMIN_EMAIL: string
     }
   }
