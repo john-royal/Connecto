@@ -9,6 +9,8 @@ declare global {
       SESSION_SECRET: string
       JWT_SECRET: string
       CLIENT_URL: string
+      TEXTBELT_API_KEY: string
+      ADMIN_EMAIL: string
     }
   }
 

@@ -3,6 +3,7 @@ import { type NextFunction, type Request, type Response } from 'express'
 import { Server } from 'socket.io'
 import prisma from './prisma'
 import { helpers, session } from './session'
+import fetch from 'isomorphic-unfetch'
 
 const io = new Server()
 
@@ -60,6 +61,31 @@ io.on('connection', (socket) => {
       include: { user: true }
     })
     io.to(threadId.toString()).emit('message', message)
+    const recipients = await prisma.user.findMany({
+      where: {
+        AND: [
+          {
+            OR: [{ isAdmin: true }, { threads: { some: { id: threadId } } }]
+          },
+          {
+            NOT: { id: message.user.id }
+          }
+        ]
+      }
+    })
+    for (const recipient of recipients) {
+      fetch('https://textbelt.com/text', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          phone: recipient.phone,
+          message: `From ${user.name}: ${content}`,
+          key: '0c1796b9d2cdc8aff931ad928af02b3de18c9089WfDn42a2oVOZH8fzFh8TiOSZ9'
+        })
+      })
+    }
   })
 
   socket.on('disconnect', () => {
