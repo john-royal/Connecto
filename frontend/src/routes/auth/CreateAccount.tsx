@@ -6,7 +6,7 @@ import Input from '@mui/joy/Input'
 import Link from '@mui/joy/Link'
 import Typography from '@mui/joy/Typography'
 import { useState } from 'react'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import AuthLayout from '../../layouts/AuthLayout'
 import { useAuth } from '../../lib/auth'
 
@@ -25,7 +25,6 @@ export default function CreateAccount() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { createAccount } = useAuth()
-  const navigate = useNavigate()
 
   const handleSubmit = (e: React.FormEvent<CreateAccountFormElement>) => {
     e.preventDefault()
@@ -41,9 +40,6 @@ export default function CreateAccount() {
     setError('')
 
     createAccount({ name, email, phone, password })
-      .then(() => {
-        navigate('/')
-      })
       .catch((error) => {
         setError(error.message)
       })

@@ -6,7 +6,7 @@ import Input from '@mui/joy/Input'
 import Link from '@mui/joy/Link'
 import Typography from '@mui/joy/Typography'
 import { useState } from 'react'
-import { Link as RouterLink, useNavigate } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
 import AuthLayout from '../../layouts/AuthLayout'
 import { useAuth } from '../../lib/auth'
 
@@ -23,7 +23,6 @@ export default function SignIn() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const { signIn } = useAuth()
-  const navigate = useNavigate()
 
   const handleSubmit = (e: React.FormEvent<SignInFormElement>) => {
     e.preventDefault()
@@ -37,9 +36,6 @@ export default function SignIn() {
     setError('')
 
     signIn(email, password)
-      .then(() => {
-        navigate('/')
-      })
       .catch((error) => {
         setError(error.message)
       })

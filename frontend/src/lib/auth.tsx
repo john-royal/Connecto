@@ -1,4 +1,5 @@
 import { createContext, useContext, type PropsWithChildren } from 'react'
+import { useNavigate } from 'react-router-dom'
 import useSWR from 'swr'
 
 export interface User {
@@ -42,6 +43,13 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   )
 
+  const onSuccess = async () => {
+    const user = await mutate()
+    if (user != null) {
+      window.location.href = user.isAdmin ? '/admin' : '/'
+    }
+  }
+
   const signIn = async (email: string, password: string) => {
     const response = await fetch('/api/auth/login', {
       method: 'POST',
@@ -51,7 +59,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
 
     const json = await response.json()
     if (json.success as boolean) {
-      await mutate()
+      await onSuccess()
     } else {
       throw new Error(json.message)
     }
@@ -62,20 +70,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
     await mutate()
   }
 
-  const createAccount = async (user: {
+  const createAccount = async (data: {
     name: string
     email: string
+    phone: string
     password: string
   }) => {
     const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(user)
+      body: JSON.stringify(data)
     })
 
     const json = await response.json()
     if (json.success as boolean) {
-      await mutate()
+      await onSuccess()
     } else {
       throw new Error(json.message)
     }

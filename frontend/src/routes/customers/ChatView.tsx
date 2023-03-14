@@ -1,80 +1,30 @@
+import AttachFileIcon from '@mui/icons-material/AttachFile'
 import CloseIcon from '@mui/icons-material/Close'
 import SendIcon from '@mui/icons-material/Send'
-import AttachFileIcon from '@mui/icons-material/AttachFile'
-import Button from '@mui/material/Button'
 import Box from '@mui/joy/Box'
 import Card from '@mui/joy/Card'
 import CardContent from '@mui/joy/CardContent'
 import Typography from '@mui/joy/Typography'
 import type React from 'react'
-import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { io, type Socket } from 'socket.io-client'
-import { v4 as uuidv4 } from 'uuid'
-import DashboardLayout from '../layouts/DashboardLayout'
-import { useAuth, type User } from '../lib/auth'
-
-interface Message {
-  id: string
-  user: User
-  content: string
-  createdAt: Date
-}
+import { Fragment, useState } from 'react'
+import { Link, useLoaderData } from 'react-router-dom'
+import DashboardLayout from '../../layouts/DashboardLayout'
+import { useChat } from '../../lib/chat'
 
 function ChatView() {
-  const { user } = useAuth()
-  const [socket, setSocket] = useState<Socket | null>(null)
-  const [messages, setMessages] = useState<Message[]>([])
+  const { thread } = useLoaderData() as { thread: { id: number } }
+  const { messages, sendMessage } = useChat(thread.id)
   const [inputValue, setInputValue] = useState('')
-
-  useEffect(() => {
-    const newSocket = io()
-
-    newSocket.on('connect', () => {
-      console.log('[socket.io] Connected to server')
-    })
-
-    newSocket.on('disconnect', () => {
-      console.log('[socket.io] Disconnected from server')
-    })
-
-    newSocket.on('connect_error', (error) => {
-      console.error('[socket.io]', error)
-    })
-
-    setSocket(newSocket)
-
-    return () => {
-      newSocket.disconnect()
-    }
-  }, [])
-
-  useEffect(() => {
-    if (socket == null) return
-
-    socket.on('message', (newMessage: Message) => {
-      setMessages((messages) => [...messages, newMessage])
-    })
-
-    return () => {
-      socket.off('message')
-    }
-  }, [socket])
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-
-    if (socket == null || user == null)
-      throw new Error('Missing user or socket')
-    if (!inputValue) return
-
-    socket.emit('message', {
-      id: uuidv4(),
-      user,
-      content: inputValue,
-      createdAt: new Date()
-    })
-    setInputValue('')
+    sendMessage(inputValue)
+      .then(() => {
+        setInputValue('')
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }
 
   return (
@@ -83,12 +33,12 @@ function ChatView() {
         <div className="chatMessages">
           <ul>
             {messages.map(({ id, user, content }) => (
-              <>
+              <Fragment key={id}>
                 <div className="messageName">{user.name}</div>
                 <div className="messageBubble">
-                  <li key={id}>{content}</li>
+                  <li>{content}</li>
                 </div>
-              </>
+              </Fragment>
             ))}
           </ul>
         </div>

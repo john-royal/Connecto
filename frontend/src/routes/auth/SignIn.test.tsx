@@ -50,7 +50,7 @@ describe('SignIn', () => {
     expect(screen.getByRole('button', { name: 'Sign In' })).toBeInTheDocument()
   })
 
-  it('calls sign in function and redirects when form is submitted', async () => {
+  it('calls sign in function when form is submitted', async () => {
     const mockNavigate = vi.fn()
     ;(useNavigate as Mock).mockReturnValue(mockNavigate)
 
@@ -76,9 +76,5 @@ describe('SignIn', () => {
       expect(auth.signIn).toHaveBeenCalledTimes(1)
     })
     expect(auth.signIn).toHaveBeenCalledWith('john.doe@email.com', 'password')
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledTimes(1)
-    })
-    expect(mockNavigate).toHaveBeenCalledWith('/')
   })
 })

@@ -4,7 +4,7 @@ import Card from '@mui/joy/Card'
 import CardContent from '@mui/joy/CardContent'
 import Typography from '@mui/joy/Typography'
 import { Link } from 'react-router-dom'
-import DashboardLayout from '../layouts/DashboardLayout'
+import DashboardLayout from '../../layouts/DashboardLayout'
 
 function StartView() {
   const card = (
@@ -32,7 +32,9 @@ function StartView() {
             borderColor: '#59606D'
           }}
         >
-          <Link to="/chat" style={{ textDecoration: 'none' }}>{card}</Link>
+          <Link to="/chat" style={{ textDecoration: 'none' }}>
+            {card}
+          </Link>
         </Box>
       </div>
     </DashboardLayout>

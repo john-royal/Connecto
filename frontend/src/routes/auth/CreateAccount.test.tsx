@@ -54,7 +54,7 @@ describe('CreateAccount', () => {
     ).toBeInTheDocument()
   })
 
-  it('calls create account function and redirects when form is submitted', async () => {
+  it('calls create account function when form is submitted', async () => {
     const mockNavigate = vi.fn()
     ;(useNavigate as Mock).mockReturnValue(mockNavigate)
 
@@ -91,10 +91,6 @@ describe('CreateAccount', () => {
       phone: '8773934448',
       password: 'password'
     })
-    await waitFor(() => {
-      expect(mockNavigate).toHaveBeenCalledTimes(1)
-    })
-    expect(mockNavigate).toHaveBeenCalledWith('/')
   })
 
   it('displays error message when create account fails', async () => {
