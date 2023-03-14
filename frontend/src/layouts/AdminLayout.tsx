@@ -63,6 +63,9 @@ function AdminLayout() {
             overflow: 'scroll',
             flexGrow: 1,
             height: 'calc(100vh - 65px)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'flex-end',
             backgroundColor: 'background.level1'
           }}
         >
