@@ -1,40 +1,65 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { type NextFunction, type Request, type Response } from 'express'
 import { Server } from 'socket.io'
-import type { Message } from './prisma'
 import prisma from './prisma'
-import { session, helpers } from './session'
+import { helpers, session } from './session'
 
 const io = new Server()
 
-io.use((socket, next) => {
-  session(socket.request as Request, {} as Response, next as NextFunction)
-})
-
-io.use((socket, next) => {
-  helpers(socket.request as Request, {} as Response, next as NextFunction)
-})
+for (const middleware of [session, helpers]) {
+  io.use((socket, next) => {
+    middleware(socket.request as Request, {} as Response, next as NextFunction)
+  })
+}
 
 io.on('connection', (socket) => {
-  console.log('Client connected: ', (socket.request as Request).user)
+  const user = (socket.request as Request).user
+  let threadId: number | undefined
 
-  socket.on('join', async (id: string) => {
-    const thread = await prisma.thread.findUnique({ where: { id: Number(id) } })
+  socket.on('join', async ({ id }: { id: number }) => {
+    const thread = await prisma.thread.findUnique({
+      select: { customerId: true },
+      where: { id }
+    })
     if (thread == null) {
       socket.emit('error', { message: 'Thread not found' })
     } else if (
-      thread.customerId !== (socket.request as Request).session.userId
+      user == null ||
+      (user?.id !== thread.customerId && !user.isAdmin)
     ) {
       socket.emit('error', { message: 'Unauthorized' })
     } else {
-      await socket.join(id)
-      socket.emit('joined', id)
+      threadId = id
+      await socket.join(threadId.toString())
+      socket.emit('joined', { id })
     }
   })
 
-  socket.on('message', (message: Message) => {
-    console.log(`Message received:`, message)
-    io.emit('message', message) // broadcast to all clients
+  // leave the thread
+  socket.on('leave', async () => {
+    if (threadId == null) return
+    await socket.leave(threadId.toString())
+    threadId = undefined
+    socket.emit('left', '')
+  })
+
+  socket.on('message', async (content: string) => {
+    console.log('Message received: ', content)
+    if (user == null || threadId == null) {
+      socket.emit('error', { message: 'Unauthorized' })
+      return
+    }
+    const message = await prisma.message.create({
+      data: {
+        content,
+        thread: { connect: { id: threadId } },
+        user: {
+          connect: { id: user.id }
+        }
+      },
+      include: { user: true }
+    })
+    io.to(threadId.toString()).emit('message', message)
   })
 
   socket.on('disconnect', () => {

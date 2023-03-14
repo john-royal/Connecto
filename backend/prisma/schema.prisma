@@ -33,9 +33,9 @@ model Message {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   content   String
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
-  thread    Thread   @relation(fields: [threadId], references: [id])
+  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
   threadId  Int
 }
 

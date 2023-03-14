@@ -17,7 +17,16 @@ export const findAll: RequestHandler = async (req, res) => {
   } else {
     where.customer = { id: Number(req.user!.id) }
   }
-  const threads = await prisma.thread.findMany({ where })
+  const threads = await prisma.thread.findMany({
+    where,
+    include: {
+      customer: true,
+      messages: {
+        include: { user: true },
+        orderBy: { createdAt: 'asc' }
+      }
+    }
+  })
   res.status(200).send({ threads })
 }
 
@@ -29,7 +38,7 @@ export const findOne: RequestHandler = async (req, res) => {
       customer: true
     }
   })
-  if (!req.user!.isAdmin || thread?.customerId !== req.user!.id) {
+  if (!req.user!.isAdmin && thread?.customerId !== req.user!.id) {
     res.status(401).send({ message: 'Unauthorized' })
   } else if (thread == null) {
     res.status(404).send({ message: 'Thread not found' })
