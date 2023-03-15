@@ -1,4 +1,3 @@
-import ConnectWithoutContactIcon from '@mui/icons-material/ConnectWithoutContact'
 import Person from '@mui/icons-material/Person'
 import Avatar from '@mui/joy/Avatar'
 import Box from '@mui/joy/Box'
@@ -134,9 +133,7 @@ function HeaderMenu() {
       <div>
         <IconButton
           id="basic-demo-button"
-          onClick={() => {
-            return
-          }}
+          onClick={() => {}}
           size="sm"
           variant="outlined"
           sx={[

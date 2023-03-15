@@ -58,9 +58,7 @@ function ChatView() {
     }
 
     function handleLeave() {
-      return (
-        location.href = "/"
-      )
+      return (location.href = '/')
     }
 
     return (
@@ -87,7 +85,7 @@ function ChatView() {
               }
             ]}
           >
-              Leave Chat
+            Leave Chat
           </IconButton>
           <IconButton
             id="basic-demo-button"
