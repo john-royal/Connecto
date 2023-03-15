@@ -131,61 +131,63 @@ function HeaderMenu() {
 
   return (
     <>
-      <IconButton
-        id="basic-demo-button"
-        onClick={() => {
-          return
-        }}
-        size="sm"
-        variant="outlined"
-        sx={[
-          {
-            color: '#70ACB1',
-            borderColor: '#70ACB1',
-            p: 1,
-            ml: 150,
-            '&:hover': {
-              backgroundColor: '#C6F1E7'
-            },
-            '&:active': {
-              color: 'white',
-              backgroundColor: '#70ACB1'
+      <div>
+        <IconButton
+          id="basic-demo-button"
+          onClick={() => {
+            return
+          }}
+          size="sm"
+          variant="outlined"
+          sx={[
+            {
+              color: '#70ACB1',
+              borderColor: '#70ACB1',
+              p: 2,
+              mr: 3,
+              '&:hover': {
+                backgroundColor: '#C6F1E7'
+              },
+              '&:active': {
+                color: 'white',
+                backgroundColor: '#70ACB1'
+              }
             }
-          }
-        ]}
-      >
-        <Link to="/" style={{ textDecoration: 'none', color: '#70ACB1' }}>
-          Leave Chat
-        </Link>
-      </IconButton>
-      <IconButton
-        id="basic-demo-button"
-        aria-controls={open ? 'basic-menu' : undefined}
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        onClick={() => {
-          setOpen(true)
-        }}
-        size="sm"
-        variant="outlined"
-        sx={[
-          {
-            color: '#70ACB1',
-            borderColor: '#70ACB1',
-            '&:hover': {
-              backgroundColor: '#C6F1E7'
-            },
-            '&:active': {
-              color: 'white',
-              backgroundColor: '#70ACB1'
+          ]}
+        >
+          <Link to="/" style={{ textDecoration: 'none', color: '#70ACB1' }}>
+            Leave Chat
+          </Link>
+        </IconButton>
+        <IconButton
+          id="basic-demo-button"
+          aria-controls={open ? 'basic-menu' : undefined}
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={() => {
+            setOpen(true)
+          }}
+          size="sm"
+          variant="outlined"
+          sx={[
+            {
+              color: '#70ACB1',
+              borderColor: '#70ACB1',
+              '&:hover': {
+                backgroundColor: '#C6F1E7'
+              },
+              '&:active': {
+                color: 'white',
+                backgroundColor: '#70ACB1'
+              }
             }
-          }
-        ]}
-        aria-label="Me"
-        ref={anchor}
-      >
-        <Person />
-      </IconButton>
+          ]}
+          aria-label="Me"
+          ref={anchor}
+        >
+          <Person />
+        </IconButton>
+      </div>
       <Menu
         id="basic-menu"
         placement="bottom-end"
@@ -212,6 +214,7 @@ function ThreadsList({ threads }: { threads: ThreadPreview[] }) {
         bgcolor: 'background.surface',
         borderRight: '1px solid',
         borderColor: 'divider',
+        position: 'relative',
         width: '300px'
       }}
     >

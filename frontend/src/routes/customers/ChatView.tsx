@@ -1,11 +1,7 @@
 import '../../App.css'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
-import Button from '@mui/joy/Button'
-import CloseIcon from '@mui/icons-material/Close'
 import SendIcon from '@mui/icons-material/Send'
 import Box from '@mui/joy/Box'
-import Card from '@mui/joy/Card'
-import CardContent from '@mui/joy/CardContent'
 import IconButton from '@mui/joy/IconButton'
 import Typography from '@mui/joy/Typography'
 import Person from '@mui/icons-material/Person'
@@ -61,63 +57,67 @@ function ChatView() {
       setOpen(false)
     }
 
+    function handleLeave() {
+      return (
+        location.href = "/"
+      )
+    }
+
     return (
       <>
-        <IconButton
-          id="basic-demo-button"
-          onClick={() => {
-            return
-          }}
-          size="sm"
-          variant="outlined"
-          sx={[
-            {
-              color: '#70ACB1',
-              borderColor: '#70ACB1',
-              p: 1,
-              ml: 150,
-              '&:hover': {
-                backgroundColor: '#C6F1E7'
-              },
-              '&:active': {
-                color: 'white',
-                backgroundColor: '#70ACB1'
+        <div>
+          <IconButton
+            id="basic-demo-button"
+            onClick={handleLeave}
+            size="sm"
+            variant="outlined"
+            sx={[
+              {
+                color: '#70ACB1',
+                borderColor: '#70ACB1',
+                p: 2,
+                mr: 3,
+                '&:hover': {
+                  backgroundColor: '#C6F1E7'
+                },
+                '&:active': {
+                  color: 'white',
+                  backgroundColor: '#70ACB1'
+                }
               }
-            }
-          ]}
-        >
-          <Link to="/" style={{ textDecoration: 'none', color: '#70ACB1' }}>
-            Leave Chat
-          </Link>
-        </IconButton>
-        <IconButton
-          id="basic-demo-button"
-          aria-controls={open ? 'basic-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-          onClick={() => {
-            setOpen(true)
-          }}
-          size="sm"
-          variant="outlined"
-          sx={[
-            {
-              color: '#70ACB1',
-              borderColor: '#70ACB1',
-              '&:hover': {
-                backgroundColor: '#C6F1E7'
-              },
-              '&:active': {
-                color: 'white',
-                backgroundColor: '#70ACB1'
+            ]}
+          >
+              Leave Chat
+          </IconButton>
+          <IconButton
+            id="basic-demo-button"
+            aria-controls={open ? 'basic-menu' : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? 'true' : undefined}
+            onClick={() => {
+              setOpen(true)
+            }}
+            size="sm"
+            variant="outlined"
+            sx={[
+              {
+                color: '#70ACB1',
+                borderColor: '#70ACB1',
+                '&:hover': {
+                  backgroundColor: '#C6F1E7'
+                },
+                '&:active': {
+                  color: 'white',
+                  backgroundColor: '#70ACB1'
+                }
               }
-            }
-          ]}
-          aria-label="Me"
-          ref={anchor}
-        >
-          <Person />
-        </IconButton>
+            ]}
+            aria-label="Me"
+            ref={anchor}
+          >
+            <Person />
+          </IconButton>
+        </div>
         <Menu
           id="basic-menu"
           placement="bottom-end"
@@ -138,29 +138,29 @@ function ChatView() {
 
   return (
     <>
-      <Box
-        component="header"
-        className="Header"
-        sx={{
-          p: 2,
-          gap: 2,
-          bgcolor: 'background.surface',
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gridColumn: '1 / -1',
-          borderBottom: '2px solid',
-          borderColor: 'divider',
-          position: 'sticky',
-          top: 0,
-          zIndex: 1000
-        }}
-      >
-        {logo}
-        <HeaderMenu />
-      </Box>
       <DashboardLayout>
+        <Box
+          component="header"
+          className="Header"
+          sx={{
+            p: 2,
+            gap: 2,
+            bgcolor: 'background.surface',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gridColumn: '1 / -1',
+            borderBottom: '2px solid',
+            borderColor: 'divider',
+            position: 'relative',
+            top: 0,
+            zIndex: 1000
+          }}
+        >
+          {logo}
+          <HeaderMenu />
+        </Box>
         <div className="chatContainer">
           <div className="chatMessages">
             <ul>
@@ -194,7 +194,14 @@ function ChatView() {
             <form onSubmit={handleSubmit}>
               <div className="attachFileButton">
                 <button type="submit">
-                  <AttachFileIcon sx={{ fontSize: 30 }} />
+                  <AttachFileIcon
+                    sx={{
+                      height: 0.8,
+                      width: 0.9,
+                      minHeight: 20,
+                      minWidth: 20
+                    }}
+                  />
                   <input hidden accept="image/*" multiple type="file" />
                 </button>
               </div>
@@ -207,7 +214,14 @@ function ChatView() {
               />
               <div className="sendButton">
                 <button type="submit">
-                  <SendIcon sx={{ fontSize: 45 }} />
+                  <SendIcon
+                    sx={{
+                      height: 0.8,
+                      width: 0.9,
+                      minHeight: 20,
+                      minWidth: 20
+                    }}
+                  />
                 </button>
               </div>
             </form>
@@ -215,45 +229,6 @@ function ChatView() {
         </div>
       </DashboardLayout>
     </>
-  )
-}
-
-function LeaveChatButton() {
-  const card = (
-    <IconButton
-      id="basic-demo-button"
-      onClick={() => {
-        return
-      }}
-      size="sm"
-      variant="outlined"
-      sx={[
-        {
-          color: '#70ACB1',
-          borderColor: '#70ACB1',
-          '&:hover': {
-            backgroundColor: '#C6F1E7'
-          },
-          '&:active': {
-            color: 'white',
-            backgroundColor: '#70ACB1'
-          }
-        }
-      ]}
-      aria-label="Me"
-    >
-      Leave chat
-    </IconButton>
-  )
-
-  return (
-    <div className="LeaveChat">
-      <Box>
-        <Link to="/" style={{ textDecoration: 'none' }}>
-          {card}
-        </Link>
-      </Box>
-    </div>
   )
 }
 

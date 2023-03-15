@@ -1,13 +1,14 @@
+import '../../App.css'
 import SendIcon from '@mui/icons-material/Send'
+import AttachFileIcon from '@mui/icons-material/AttachFile'
 import Box from '@mui/joy/Box'
-import Card from '@mui/joy/Card'
 import CircularProgress from '@mui/joy/CircularProgress'
 import FormControl from '@mui/joy/FormControl'
 import FormHelperText from '@mui/joy/FormHelperText'
 import IconButton from '@mui/joy/IconButton'
 import Input from '@mui/joy/Input'
-import Typography from '@mui/joy/Typography'
 import {
+  Fragment,
   forwardRef,
   useEffect,
   useRef,
@@ -18,40 +19,95 @@ import {
 import { useParams } from 'react-router-dom'
 import { useAuth } from '../../lib/auth'
 import { useChat, type Message } from '../../lib/chat'
+import DashboardLayout from '../../layouts/DashboardLayout'
 
-function MessageList({ messages }: { messages: Message[] }) {
+function MessageContainer(thread) {
+  const { messages, sendMessage } = useChat(Number(thread))
   const { user } = useAuth()
+  const [inputValue, setInputValue] = useState('')
+
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    sendMessage(inputValue)
+      .then(() => {
+        setInputValue('')
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+  }
 
   return (
-    <Box sx={{ flex: 1 }}>
-      {messages
-        .map((message) => ({ message, isMe: message.user.id === user?.id }))
-        .map(({ message, isMe }) => (
-          <Box
-            key={message.id}
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: isMe ? 'flex-end' : 'flex-start',
-              mb: 2
-            }}
-          >
-            <Card
-              variant="outlined"
-              sx={{
-                maxWidth: '75%',
-                textAlign: isMe ? 'right' : 'left',
-                boxShadow: 'none'
-              }}
-            >
-              <Typography fontSize="sm" color="neutral">
-                {message.user.name}
-              </Typography>
-              <Typography>{message.content}</Typography>
-            </Card>
-          </Box>
-        ))}
-    </Box>
+    <>
+      <DashboardLayout>
+        <div className="adminChatContainer">
+          <div className="chatMessages">
+            <ul>
+              {messages
+                .map((message) => ({
+                  message,
+                  isMe: message.user.id === user?.id
+                }))
+                .map(({ message, isMe }) =>
+                  isMe ? (
+                    <Fragment key={message.id}>
+                      <div className="rightMessageName">
+                        {message.user.name}
+                      </div>
+                      <div className="rightMessageBubble">
+                        <li>{message.content}</li>
+                      </div>
+                    </Fragment>
+                  ) : (
+                    <Fragment key={message.id}>
+                      <div className="leftMessageName">{message.user.name}</div>
+                      <div className="leftMessageBubble">
+                        <li>{message.content}</li>
+                      </div>
+                    </Fragment>
+                  )
+                )}
+            </ul>
+          </div>
+          <div className="chatInputs">
+            <form onSubmit={handleSubmit}>
+              <div className="attachFileButton">
+                <button type="submit">
+                  <AttachFileIcon
+                    sx={{
+                      height: 0.8,
+                      width: 0.9,
+                      minHeight: 20,
+                      minWidth: 20
+                    }}
+                  />
+                  <input hidden accept="image/*" multiple type="file" />
+                </button>
+              </div>
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(event) => {
+                  setInputValue(event.target.value)
+                }}
+              />
+              <div className="sendButton">
+                <button type="submit">
+                  <SendIcon
+                    sx={{
+                      height: 0.8,
+                      width: 0.9,
+                      minHeight: 20,
+                      minWidth: 20
+                    }}
+                  />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </DashboardLayout>
+    </>
   )
 }
 
@@ -136,17 +192,9 @@ function AdminChatView() {
   }, [chat.messages])
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        overflowAnchor: 'none',
-        p: 2
-      }}
-    >
-      <MessageList messages={chat.messages} />
-      <MessageFormWithRef onSubmit={chat.sendMessage} ref={formRef} />
-    </Box>
+    <>
+      <MessageContainer thread={threadId} />
+    </>
   )
 }
 
