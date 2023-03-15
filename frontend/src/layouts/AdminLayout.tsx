@@ -23,6 +23,7 @@ import useSWR, { useSWRConfig } from 'swr'
 import LoadingView from '../components/LoadingView'
 import { useAuth } from '../lib/auth'
 import { type Message } from '../lib/chat'
+import Logo from '../assets/logo.png'
 
 interface ThreadPreview {
   id: number
@@ -87,15 +88,8 @@ function Header() {
         textDecoration: 'none'
       }}
     >
-      <IconButton
-        size="sm"
-        variant="solid"
-        sx={{ display: 'inline-flex', mr: 1.5 }}
-      >
-        <ConnectWithoutContactIcon />
-      </IconButton>
       <Typography component="h1" fontWeight="xl">
-        Connecto
+        <img src={Logo} alt="Logo" width="123" height="53" />
       </Typography>
     </Link>
   )
@@ -113,7 +107,7 @@ function Header() {
         justifyContent: 'space-between',
         alignItems: 'center',
         gridColumn: '1 / -1',
-        borderBottom: '1px solid',
+        borderBottom: '2px solid',
         borderColor: 'divider',
         position: 'sticky',
         top: 0,
@@ -139,6 +133,33 @@ function HeaderMenu() {
     <>
       <IconButton
         id="basic-demo-button"
+        onClick={() => {
+          return
+        }}
+        size="sm"
+        variant="outlined"
+        sx={[
+          {
+            color: '#70ACB1',
+            borderColor: '#70ACB1',
+            p: 1,
+            ml: 150,
+            '&:hover': {
+              backgroundColor: '#C6F1E7'
+            },
+            '&:active': {
+              color: 'white',
+              backgroundColor: '#70ACB1'
+            }
+          }
+        ]}
+      >
+        <Link to="/" style={{ textDecoration: 'none', color: '#70ACB1' }}>
+          Leave Chat
+        </Link>
+      </IconButton>
+      <IconButton
+        id="basic-demo-button"
         aria-controls={open ? 'basic-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
@@ -147,7 +168,19 @@ function HeaderMenu() {
         }}
         size="sm"
         variant="outlined"
-        color="primary"
+        sx={[
+          {
+            color: '#70ACB1',
+            borderColor: '#70ACB1',
+            '&:hover': {
+              backgroundColor: '#C6F1E7'
+            },
+            '&:active': {
+              color: 'white',
+              backgroundColor: '#70ACB1'
+            }
+          }
+        ]}
         aria-label="Me"
         ref={anchor}
       >
