@@ -1,8 +1,7 @@
 .App {
   width: 100vw;
   height: 100vh;
-  display: flex;
-  flex-direction: row;
+  background-color: #f7f7f8;
 }
 
 body {
@@ -65,6 +64,7 @@ body {
 .JoinChat {
   text-align: center;
   align-items: center;
+  margin-top: 10%;
   height: center;
   width: 100vw;
   display: flex;
@@ -88,11 +88,25 @@ body {
 
 .chatContainer {
   position: relative;
-  margin: 10px 10px 10px 10px;
+  margin: 1% 1% 1% 1%;
   padding: 10px 5px 10px 5px;
-  width: 80%;
-  border: 3px solid #59606D;
+  width: 98%;
+  height: 85%;
+  border: 2px solid #dbdbe2;
   border-radius: 10px;
+  background-color: white;
+}
+
+.adminChatContainer {
+  position: relative;
+  margin: 1% 1% 1% 1%;
+  padding: 10px 5px 10px 5px;
+  width: 78%;
+  height: 95%;
+  border: 2px solid #dbdbe2;
+  border-radius: 10px;
+  background-color: white;
+  overflow: hidden;
 }
 
 .chatInputs {
@@ -108,21 +122,24 @@ body {
 .chatInputs input[type=text] {
   position: absolute;
   bottom: 0;
-  width: 90%;
+  width: 88%;
   height: 80%;
   padding: 12px 20px;
-  border: 3px solid #59606D;
+  border: 2px solid #59606D;
   border-radius: 5px;
-  font-size: 15pt;
-  margin-left: 45px;
-  margin-right: 45px;
+  font-size: 12pt;
+  margin-left: 6%;
+  margin-right: 6%;
 }
 
 .sendButton button[type=submit] {
   position: absolute;
   bottom: 0;
   right: 0;
+  width: 4%;
   height: 80%;
+  min-width: 20px;
+  min-height: 20px;
   color: #648386;
   border: 0px;
   background-color: white;
@@ -140,6 +157,9 @@ body {
   position: absolute;
   bottom: 0;
   left: 0;
+  width: 4%;
+  min-width: 20px;
+  min-height: 20px;
   height: 80%;
   color: #648386;
   border: 0px;
@@ -177,10 +197,10 @@ body {
   background-color: #868b92;
 }
 
-.messageBubble {
+.rightMessageBubble {
   margin-left: auto;
   margin-right: 50px;
-  font-size: 14pt;
+  font-size: 12pt;
   height: auto;
   width: fit-content;
   max-width: 40%;
@@ -194,9 +214,34 @@ body {
   overflow-anchor: bottom;
 }
 
-.messageName {
+.rightMessageName {
   margin-left: auto;
   margin-right: 50px;
+  font-size: 10pt;
+  height: auto;
+  width: fit-content;
+  max-width: 40%;
+  overflow-wrap: break-word; 
+}
+
+.leftMessageBubble {
+  margin-right: auto;
+  font-size: 12pt;
+  height: auto;
+  width: fit-content;
+  max-width: 40%;
+  background-color: #ececec;
+  overflow-wrap: break-word; 
+  border: 1px solid #59606D;
+  border-radius: 18px;
+  padding: 8px 14px;
+  list-style-type: none;
+  margin-bottom: 12px;
+  overflow-anchor: bottom;
+}
+
+.leftMessageName {
+  margin-right: auto;
   font-size: 10pt;
   height: auto;
   width: fit-content;
