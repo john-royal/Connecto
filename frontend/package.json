@@ -19,6 +19,7 @@
     "@mui/material": "^5.11.12",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-geocode": "^0.2.3",
     "react-router-dom": "^6.9.0",
     "socket.io-client": "^4.6.1",
     "swr": "^2.1.0"
@@ -28,6 +29,7 @@
     "@testing-library/react": "^14.0.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
+    "@types/react-geocode": "^0.2.1",
     "@types/testing-library__jest-dom": "^5.14.5",
     "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",

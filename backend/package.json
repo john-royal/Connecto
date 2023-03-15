@@ -26,6 +26,7 @@
     "helmet": "^6.0.1",
     "isomorphic-unfetch": "^4.0.2",
     "morgan": "^1.10.0",
+    "react-geocode": "^0.2.3",
     "socket.io": "^4.6.1",
     "socket.io-client": "^4.6.1"
   },
@@ -36,6 +37,7 @@
     "@types/jest": "^29.4.0",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.14.0",
+    "@types/react-geocode": "^0.2.1",
     "@types/supertest": "^2.0.12",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.53.0",

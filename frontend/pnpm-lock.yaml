@@ -10,6 +10,7 @@ specifiers:
   '@testing-library/react': ^14.0.0
   '@types/react': ^18.0.27
   '@types/react-dom': ^18.0.10
+  '@types/react-geocode': ^0.2.1
   '@types/testing-library__jest-dom': ^5.14.5
   '@types/uuid': ^9.0.1
   '@typescript-eslint/eslint-plugin': ^5.0.0
@@ -28,6 +29,7 @@ specifiers:
   prettier: ^2.8.4
   react: ^18.2.0
   react-dom: ^18.2.0
+  react-geocode: ^0.2.3
   react-router-dom: ^6.9.0
   socket.io-client: ^4.6.1
   swr: ^2.1.0
@@ -43,6 +45,7 @@ dependencies:
   '@mui/material': 5.11.12_xqeqsl5kvjjtyxwyi3jhw3yuli
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
+  react-geocode: 0.2.3
   react-router-dom: 6.9.0_biqbaboplfbrettd7655fr4n2y
   socket.io-client: 4.6.1
   swr: 2.1.0_react@18.2.0
@@ -52,6 +55,7 @@ devDependencies:
   '@testing-library/react': 14.0.0_biqbaboplfbrettd7655fr4n2y
   '@types/react': 18.0.28
   '@types/react-dom': 18.0.11
+  '@types/react-geocode': 0.2.1
   '@types/testing-library__jest-dom': 5.14.5
   '@types/uuid': 9.0.1
   '@typescript-eslint/eslint-plugin': 5.54.1_mlk7dnz565t663n4razh6a6v6i
@@ -991,6 +995,10 @@ packages:
     resolution: {integrity: sha512-O38bPbI2CWtgw/OoQoY+BRelw7uysmXbWvw3nLWO21H1HSh+GOlqPuXshJfjmpNlKiiSDG9cc1JZAaMmVdcTlw==}
     dependencies:
       '@types/react': 18.0.28
+    dev: true
+
+  /@types/react-geocode/0.2.1:
+    resolution: {integrity: sha512-iZAvDCFNYc3jZqB/MoPkOE/Gc0AzrBkCjpQnVpRKrDB6v8k6i4Cp+fpV7y3MLg13zasovTpuguo25nkVc31fcA==}
     dev: true
 
   /@types/react-is/17.0.3:
@@ -3239,6 +3247,12 @@ packages:
       loose-envify: 1.4.0
       react: 18.2.0
       scheduler: 0.23.0
+
+  /react-geocode/0.2.3:
+    resolution: {integrity: sha512-sIpbgmn1IUzAxO4haOZ6jeeFnMD8ya9PC38yiNrmJ9vPWbvAO2D/2yfCBzZjGZVUm4PRzKAc0KghXfaEnug0TQ==}
+    dependencies:
+      regenerator-runtime: 0.13.11
+    dev: false
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
