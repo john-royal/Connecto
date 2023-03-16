@@ -3,6 +3,7 @@ import helmet from 'helmet'
 import morgan from 'morgan'
 import * as authController from './controllers/auth'
 import * as threadsController from './controllers/threads'
+import * as locationController from './controllers/location'
 import { helpers, session } from './lib/session'
 
 const router = Router()
@@ -25,6 +26,8 @@ router.use('/threads', threadsController.enforceAuth)
 router.get('/threads', threadsController.findAll)
 router.post('/threads', threadsController.create)
 router.get('/threads/:id', threadsController.findOne)
+
+router.get("/location", locationController.geocode)
 
 router.use(((error, req, res, next) => {
   console.error(error)
