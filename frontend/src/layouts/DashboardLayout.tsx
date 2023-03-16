@@ -20,7 +20,6 @@ function DashboardLayout({ children, sidebarItems }: DashboardLayoutProps) {
 
   return (
     <div className="App">
-      {/* <Sidebar>{sidebarItems}</Sidebar> */}
       {children}
     </div>
   )

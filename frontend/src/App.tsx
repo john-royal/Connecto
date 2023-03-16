@@ -1,5 +1,5 @@
 import CssBaseline from '@mui/joy/CssBaseline'
-import { CssVarsProvider, StyledEngineProvider } from '@mui/joy/styles'
+import { CssVarsProvider, StyledEngineProvider, extendTheme } from '@mui/joy/styles'
 import { type PropsWithChildren } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
@@ -12,6 +12,38 @@ import SignIn from './routes/auth/SignIn'
 import SignOut from './routes/auth/SignOut'
 import ChatView from './routes/customers/ChatView'
 import StartView from './routes/customers/StartView'
+
+const theme = extendTheme({
+  colorSchemes: {
+    light: {
+      palette: {
+        primary: {
+          50: '#fdf2f8',
+          100: '#70ACB1',
+          200: '#C6F1E7', //selected color
+          300: '#aed6cd', //hover when selected
+          400: '#70ACB1',
+          500: '#70ACB1',
+          600: '#70ACB1',
+          700: '#70ACB1',
+          800: '#70ACB1',
+          900: '#70ACB1',
+          solidBg: 'var(--joy-palette-primary-200)',
+          solidHoverBg: 'var(--joy-palette-primary-300)',
+          // solidHoverBg: 'var(--joy-palette-primary-200)',
+          // plainActiveBg: 'var(--joy-palette-primary-200)',
+          // outlinedBorder: 'var(--joy-palette-secondary-500)',
+          // outlinedColor: 'var(--joy-palette-secondary-700)',
+          // outlinedActiveBg: 'var(--joy-palette-secondary-100)',
+          // softColor: 'var(--joy-palette-secondary-800)',
+          // softBg: 'var(--joy-palette-primary-200)',
+          // softActiveBg: 'var(--joy-palette-secondary-300)',
+          // plainColor: 'var(--joy-palette-secondary-700)',
+        }
+      }
+    }
+  }
+})
 
 const router = createBrowserRouter([
   {
@@ -43,7 +75,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/admin',
-        element: <p>Choose a thread.</p>
+        element: <h2>Choose a thread.</h2>
       },
       {
         path: '/admin/:threadId',
@@ -78,7 +110,7 @@ export default function App() {
 function StylingProvider({ children }: PropsWithChildren) {
   return (
     <StyledEngineProvider injectFirst>
-      <CssVarsProvider>
+      <CssVarsProvider theme={theme}>
         <CssBaseline />
         {children}
       </CssVarsProvider>

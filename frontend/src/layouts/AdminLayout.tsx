@@ -1,16 +1,12 @@
-import Person from '@mui/icons-material/Person'
 import Avatar from '@mui/joy/Avatar'
 import Box from '@mui/joy/Box'
-import IconButton from '@mui/joy/IconButton'
 import List from '@mui/joy/List'
 import ListDivider from '@mui/joy/ListDivider'
 import ListItem from '@mui/joy/ListItem'
 import ListItemButton from '@mui/joy/ListItemButton'
 import ListItemDecorator from '@mui/joy/ListItemDecorator'
-import Menu from '@mui/joy/Menu'
-import MenuItem from '@mui/joy/MenuItem'
 import Typography from '@mui/joy/Typography'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect } from 'react'
 import {
   Link,
   Outlet,
@@ -22,7 +18,7 @@ import useSWR, { useSWRConfig } from 'swr'
 import LoadingView from '../components/LoadingView'
 import { useAuth } from '../lib/auth'
 import { type Message } from '../lib/chat'
-import Logo from '../assets/logo.png'
+import Header from '../components/Header'
 
 interface ThreadPreview {
   id: number
@@ -52,7 +48,11 @@ function AdminLayout() {
 
   return (
     <>
-      <Header />
+      {window.location.pathname === '/admin' ? (
+        <Header leaveChat={false} />
+      ) : (
+        <Header leaveChat={true} />
+      )}
       <Box sx={{ display: 'flex', flexDirection: 'row', maxWidth: '100vw' }}>
         <ThreadsList threads={threads} />
         <Box
@@ -76,139 +76,12 @@ function AdminLayout() {
   )
 }
 
-function Header() {
-  const logo = (
-    <Link
-      to="/admin"
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        textDecoration: 'none'
-      }}
-    >
-      <Typography component="h1" fontWeight="xl">
-        <img src={Logo} alt="Logo" width="123" height="53" />
-      </Typography>
-    </Link>
-  )
-
-  return (
-    <Box
-      component="header"
-      className="Header"
-      sx={{
-        p: 2,
-        gap: 2,
-        bgcolor: 'background.surface',
-        display: 'flex',
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        gridColumn: '1 / -1',
-        borderBottom: '2px solid',
-        borderColor: 'divider',
-        position: 'sticky',
-        top: 0,
-        zIndex: 1000
-      }}
-    >
-      {logo}
-      <HeaderMenu />
-    </Box>
-  )
-}
-
-function HeaderMenu() {
-  const { user } = useAuth()
-  const anchor = useRef<HTMLAnchorElement | null>(null)
-  const [open, setOpen] = useState(false)
-
-  const handleClose = () => {
-    setOpen(false)
-  }
-
-  return (
-    <>
-      <div>
-        <IconButton
-          id="basic-demo-button"
-          onClick={() => {}}
-          size="sm"
-          variant="outlined"
-          sx={[
-            {
-              color: '#70ACB1',
-              borderColor: '#70ACB1',
-              p: 2,
-              mr: 3,
-              '&:hover': {
-                backgroundColor: '#C6F1E7'
-              },
-              '&:active': {
-                color: 'white',
-                backgroundColor: '#70ACB1'
-              }
-            }
-          ]}
-        >
-          <Link to="/" style={{ textDecoration: 'none', color: '#70ACB1' }}>
-            Leave Chat
-          </Link>
-        </IconButton>
-        <IconButton
-          id="basic-demo-button"
-          aria-controls={open ? 'basic-menu' : undefined}
-          aria-haspopup="true"
-          aria-expanded={open ? 'true' : undefined}
-          onClick={() => {
-            setOpen(true)
-          }}
-          size="sm"
-          variant="outlined"
-          sx={[
-            {
-              color: '#70ACB1',
-              borderColor: '#70ACB1',
-              '&:hover': {
-                backgroundColor: '#C6F1E7'
-              },
-              '&:active': {
-                color: 'white',
-                backgroundColor: '#70ACB1'
-              }
-            }
-          ]}
-          aria-label="Me"
-          ref={anchor}
-        >
-          <Person />
-        </IconButton>
-      </div>
-      <Menu
-        id="basic-menu"
-        placement="bottom-end"
-        anchorEl={anchor.current}
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="basic-demo-button"
-        sx={{ minWidth: 120, zIndex: 1500 }}
-      >
-        <MenuItem>Hi, {user?.name ?? 'User'}</MenuItem>
-        <MenuItem component={Link} to="/sign-out">
-          Sign Out
-        </MenuItem>
-      </Menu>
-    </>
-  )
-}
-
 function ThreadsList({ threads }: { threads: ThreadPreview[] }) {
   return (
     <Box
       className="Inbox"
       sx={{
-        bgcolor: 'background.surface',
+        bgcolor: '#ecfbf8',
         borderRight: '1px solid',
         borderColor: 'divider',
         position: 'relative',
@@ -243,7 +116,7 @@ function ThreadListRow({
       <ListItem>
         <ListItemButton
           color={selected ? 'primary' : 'neutral'}
-          variant={selected ? 'soft' : 'plain'}
+          variant={selected ? 'solid' : 'plain'}
           sx={{ p: 2 }}
           component={Link}
           to={`/admin/${id}`}

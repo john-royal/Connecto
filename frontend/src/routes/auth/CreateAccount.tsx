@@ -56,7 +56,11 @@ export default function CreateAccount() {
         </Typography>
         <Typography
           endDecorator={
-            <Link component={RouterLink} to="/sign-in">
+            <Link
+              component={RouterLink}
+              to="/sign-in"
+              sx={{ color: '#70ACB1' }}
+            >
               Sign In
             </Link>
           }
@@ -106,7 +110,24 @@ export default function CreateAccount() {
             slotProps={{ input: { 'data-testid': 'password' } }}
           />
         </FormControl>
-        <Button type="submit" loading={loading}>
+        <Button
+          type="submit"
+          loading={loading}
+          sx={[
+            {
+              color: 'white',
+              borderColor: '#70ACB1',
+              backgroundColor: '#83b0a6',
+              '&:hover': {
+                backgroundColor: '#4e797c'
+              },
+              '&:active': {
+                color: 'white',
+                backgroundColor: '#C6F1E7'
+              }
+            }
+          ]}
+        >
           Create Account
         </Button>
       </form>
