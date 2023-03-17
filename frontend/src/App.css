@@ -95,6 +95,7 @@ body {
   border: 2px solid #dbdbe2;
   border-radius: 10px;
   background-color: white;
+  min-width: 600px;
 }
 
 .adminChatContainer {
@@ -107,12 +108,13 @@ body {
   border-radius: 10px;
   background-color: white;
   overflow: hidden;
+  min-width: 600px;
 }
 
 .chatInputs {
   position: absolute;
   bottom: 0;
-  width: 97%;
+  width: 98%;
   display: flex;
   height: 10%;
   align-items: center;
@@ -122,13 +124,13 @@ body {
 .chatInputs input[type=text] {
   position: absolute;
   bottom: 0;
-  width: 88%;
+  width: 87%;
   height: 80%;
   padding: 12px 20px;
   border: 2px solid #59606D;
   border-radius: 5px;
   font-size: 12pt;
-  margin-left: 6%;
+  margin-left: 8%;
   margin-right: 6%;
 }
 
@@ -171,6 +173,27 @@ body {
 }
 
 .attachFileButton button[type=submit]:active {
+  color: #3d575a;
+}
+
+.shareLocationButton button[type=submit] {
+  position: absolute;
+  bottom: 0;
+  width: 4%;
+  min-width: 20px;
+  min-height: 20px;
+  height: 80%;
+  color: #648386;
+  border: 0px;
+  background-color: white;
+  margin-left: 4%;
+}
+
+.shareLocationButton button[type=submit]:hover {
+  color: #8ec2c7;
+}
+
+.shareLocationButton button[type=submit]:active {
   color: #3d575a;
 }
 
@@ -222,6 +245,8 @@ body {
   width: fit-content;
   max-width: 40%;
   overflow-wrap: break-word; 
+  display: flex;
+  gap: 5px;
 }
 
 .leftMessageBubble {
@@ -247,4 +272,10 @@ body {
   width: fit-content;
   max-width: 40%;
   overflow-wrap: break-word; 
+  display: flex;
+  gap: 5px;
+}
+
+.bold {
+  font-weight: bold;
 }

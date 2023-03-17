@@ -85,6 +85,7 @@ function Header({leaveChat}) {
                 color: '#70ACB1',
                 borderColor: '#70ACB1',
                 backgroundColor: 'white',
+                p: 1,
                 '&:hover': {
                   backgroundColor: '#C6F1E7'
                 },

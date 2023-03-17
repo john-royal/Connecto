@@ -54,9 +54,9 @@ function ChatView() {
     <>
       <DashboardLayout>
         <Header leaveChat={true}/>
-        <div>
+        {/* <div>
           <p>Your address: {userLocation.address}</p>
-        </div>
+        </div> */}
         <div className="chatContainer">
           <MessageContainer threadId={thread.id} />
         </div>

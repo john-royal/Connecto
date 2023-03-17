@@ -1,16 +1,29 @@
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import SendIcon from '@mui/icons-material/Send'
-import { Fragment, useState } from 'react'
+import AddLocationIcon from '@mui/icons-material/AddLocation'
+import React, { Fragment, useState } from 'react'
 import { useAuth } from '../lib/auth'
 import { useChat } from '../lib/chat'
+
+function useChatScroll<T>(dep: T): React.MutableRefObject<HTMLDivElement> {
+  const ref = React.useRef<HTMLDivElement>()
+  React.useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight
+    }
+  }, [dep])
+  return ref
+}
 
 function MessageContainer({ threadId }: { threadId: number }) {
   const { messages, sendMessage } = useChat(threadId)
   const { user } = useAuth()
   const [inputValue, setInputValue] = useState('')
 
+  const ref = useChatScroll(messages)
+
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault() 
+    event.preventDefault()
     sendMessage(inputValue)
       .then(() => {
         setInputValue('')
@@ -20,74 +33,100 @@ function MessageContainer({ threadId }: { threadId: number }) {
       })
   }
 
+  const formatDate = (timestamp) => {
+    return new Date(timestamp).toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    })
+  }
+
   return (
     <>
-          <div className="chatMessages">
-            <ul>
-              {messages
-                .map((message) => ({
-                  message,
-                  isMe: message.user.id === user?.id
-                }))
-                .map(({ message, isMe }) =>
-                  isMe ? (
-                    <Fragment key={message.id}>
-                      <div className="rightMessageName">
-                        {message.user.name}
-                      </div>
-                      <div className="rightMessageBubble">
-                        <li>{message.content}</li>
-                      </div>
-                    </Fragment>
-                  ) : (
-                    <Fragment key={message.id}>
-                      <div className="leftMessageName">{message.user.name}</div>
-                      <div className="leftMessageBubble">
-                        <li>{message.content}</li>
-                      </div>
-                    </Fragment>
-                  )
-                )}
-            </ul>
-          </div>
-          <div className="chatInputs">
-            <form onSubmit={handleSubmit}>
-              <div className="attachFileButton">
-                <button type="submit">
-                  <AttachFileIcon
-                    sx={{
-                      height: 0.8,
-                      width: 0.9,
-                      minHeight: 20,
-                      minWidth: 20
-                    }}
-                  />
-                  <input hidden accept="image/*" multiple type="file"/>
-                </button>
-              </div>
-              <input
-                type="text"
-                value={inputValue}
-                onChange={(event) => {
-                  setInputValue(event.target.value)
+      <div ref={ref} className="chatMessages">
+        <ul>
+          {messages
+            .map((message) => ({
+              message,
+              isMe: message.user.id === user?.id
+            }))
+            .map(({ message, isMe }) =>
+              isMe ? (
+                <Fragment key={message.id}>
+                  <div className="rightMessageName">
+                    <div className="bold">{message.user.name}</div>
+                    {" - " + formatDate(message.createdAt)}
+                  </div>
+                  <div className="rightMessageBubble">
+                    <li>{message.content}</li>
+                  </div>
+                </Fragment>
+              ) : (
+                <Fragment key={message.id}>
+                  <div className="leftMessageName">
+                  <div className="bold">{message.user.name}</div>
+                    {" - " + formatDate(message.createdAt)}
+                  </div>
+                  <div className="leftMessageBubble">
+                    <li>{message.content}</li>
+                  </div>
+                </Fragment>
+              )
+            )}
+        </ul>
+      </div>
+      <div className="chatInputs">
+        <form onSubmit={handleSubmit}>
+          <div className="attachFileButton">
+            <button type="submit" title="Add attachment">
+              <AttachFileIcon
+                sx={{
+                  height: 0.8,
+                  width: 0.9,
+                  minHeight: 20,
+                  minWidth: 20
                 }}
-                required
-                placeholder="Enter message"
               />
-              <div className="sendButton">
-                <button type="submit">
-                  <SendIcon
-                    sx={{
-                      height: 0.8,
-                      width: 0.9,
-                      minHeight: 20,
-                      minWidth: 20
-                    }}
-                  />
-                </button>
-              </div>
-            </form>
+              <input hidden accept="image/*" multiple type="file" />
+            </button>
           </div>
+          <div className="shareLocationButton">
+            <button type="submit" title="Share location">
+              <AddLocationIcon
+                sx={{
+                  height: 0.8,
+                  width: 0.9,
+                  minHeight: 20,
+                  minWidth: 20
+                }}
+              />
+            </button>
+          </div>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(event) => {
+              setInputValue(event.target.value)
+            }}
+            required
+            placeholder="Enter message"
+          />
+          <div className="sendButton">
+            <button type="submit">
+              <SendIcon
+                sx={{
+                  height: 0.8,
+                  width: 0.9,
+                  minHeight: 20,
+                  minWidth: 20
+                }}
+              />
+            </button>
+          </div>
+        </form>
+      </div>
     </>
   )
 }
