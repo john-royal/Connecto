@@ -26,7 +26,7 @@ function StartView() {
   return (
     <>
       <DashboardLayout>
-        <Header leaveChat={false} logoLink="/" />
+        <Header leaveChat={false} />
         <div className="JoinChat">
           <Box
             sx={{
