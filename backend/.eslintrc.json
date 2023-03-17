@@ -12,6 +12,12 @@
   },
   "plugins": ["prettier"],
   "rules": {
+    "@typescript-eslint/strict-boolean-expressions": [
+      "error",
+      {
+        "allowNullableString": true
+      }
+    ],
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-misused-promises": [
       "error",

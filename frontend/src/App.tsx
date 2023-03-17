@@ -1,5 +1,9 @@
 import CssBaseline from '@mui/joy/CssBaseline'
-import { CssVarsProvider, StyledEngineProvider, extendTheme } from '@mui/joy/styles'
+import {
+  CssVarsProvider,
+  StyledEngineProvider,
+  extendTheme
+} from '@mui/joy/styles'
 import { type PropsWithChildren } from 'react'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 
@@ -21,8 +25,8 @@ const theme = extendTheme({
         primary: {
           50: '#fdf2f8',
           100: '#70ACB1',
-          200: '#C6F1E7', //selected color
-          300: '#aed6cd', //hover when selected
+          200: '#C6F1E7', // selected color
+          300: '#aed6cd', // hover when selected
           400: '#70ACB1',
           500: '#70ACB1',
           600: '#70ACB1',
@@ -30,7 +34,7 @@ const theme = extendTheme({
           800: '#70ACB1',
           900: '#70ACB1',
           solidBg: 'var(--joy-palette-primary-200)',
-          solidHoverBg: 'var(--joy-palette-primary-300)',
+          solidHoverBg: 'var(--joy-palette-primary-300)'
           // solidHoverBg: 'var(--joy-palette-primary-200)',
           // plainActiveBg: 'var(--joy-palette-primary-200)',
           // outlinedBorder: 'var(--joy-palette-secondary-500)',

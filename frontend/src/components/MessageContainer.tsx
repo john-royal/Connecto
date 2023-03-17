@@ -1,26 +1,13 @@
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import SendIcon from '@mui/icons-material/Send'
-import AddLocationIcon from '@mui/icons-material/AddLocation'
-import React, { Fragment, useState } from 'react'
+import { Fragment, useState } from 'react'
 import { useAuth } from '../lib/auth'
 import { useChat } from '../lib/chat'
-
-function useChatScroll<T>(dep: T): React.MutableRefObject<HTMLDivElement> {
-  const ref = React.useRef<HTMLDivElement>()
-  React.useEffect(() => {
-    if (ref.current) {
-      ref.current.scrollTop = ref.current.scrollHeight
-    }
-  }, [dep])
-  return ref
-}
 
 function MessageContainer({ threadId }: { threadId: number }) {
   const { messages, sendMessage } = useChat(threadId)
   const { user } = useAuth()
   const [inputValue, setInputValue] = useState('')
-
-  const ref = useChatScroll(messages)
 
   function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -33,19 +20,9 @@ function MessageContainer({ threadId }: { threadId: number }) {
       })
   }
 
-  const formatDate = (timestamp) => {
-    return new Date(timestamp).toLocaleString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric'
-    })
-  }
-
   return (
     <>
-      <div ref={ref} className="chatMessages">
+      <div className="chatMessages">
         <ul>
           {messages
             .map((message) => ({
@@ -55,20 +32,14 @@ function MessageContainer({ threadId }: { threadId: number }) {
             .map(({ message, isMe }) =>
               isMe ? (
                 <Fragment key={message.id}>
-                  <div className="rightMessageName">
-                    <div className="bold">{message.user.name}</div>
-                    {" - " + formatDate(message.createdAt)}
-                  </div>
+                  <div className="rightMessageName">{message.user.name}</div>
                   <div className="rightMessageBubble">
                     <li>{message.content}</li>
                   </div>
                 </Fragment>
               ) : (
                 <Fragment key={message.id}>
-                  <div className="leftMessageName">
-                  <div className="bold">{message.user.name}</div>
-                    {" - " + formatDate(message.createdAt)}
-                  </div>
+                  <div className="leftMessageName">{message.user.name}</div>
                   <div className="leftMessageBubble">
                     <li>{message.content}</li>
                   </div>
@@ -80,7 +51,7 @@ function MessageContainer({ threadId }: { threadId: number }) {
       <div className="chatInputs">
         <form onSubmit={handleSubmit}>
           <div className="attachFileButton">
-            <button type="submit" title="Add attachment">
+            <button type="submit">
               <AttachFileIcon
                 sx={{
                   height: 0.8,
@@ -90,18 +61,6 @@ function MessageContainer({ threadId }: { threadId: number }) {
                 }}
               />
               <input hidden accept="image/*" multiple type="file" />
-            </button>
-          </div>
-          <div className="shareLocationButton">
-            <button type="submit" title="Share location">
-              <AddLocationIcon
-                sx={{
-                  height: 0.8,
-                  width: 0.9,
-                  minHeight: 20,
-                  minWidth: 20
-                }}
-              />
             </button>
           </div>
           <input
