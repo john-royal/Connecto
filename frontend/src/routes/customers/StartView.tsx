@@ -12,10 +12,10 @@ function StartView() {
   const card = (
     <Card>
       <CardContent>
-        <Typography level="h2" component="div">
+        <Typography level="h2" component="div" sx={{ color:"#59606D" }}>
           Need help?
         </Typography>
-        <Typography level="h5">Click here to join a support chat!</Typography>
+        <Typography level="h5" sx={{ color:"#59606D" }}>Click here to join a support chat!</Typography>
         <div className="centerIcon">
           <ContactSupportIcon sx={{ fontSize: 100, color: '#5e8b8f' }} />
         </div>
@@ -26,14 +26,15 @@ function StartView() {
   return (
     <>
       <DashboardLayout>
-        <Header leaveChat={false}/>
+        <Header leaveChat={false} logoLink="/" />
         <div className="JoinChat">
           <Box
             sx={{
               minWidth: 500,
               minHeight: 200,
+              borderRadius: 10,
               border: 3,
-              borderColor: '#70ACB1'
+              borderColor: '#dbdbe2'
             }}
           >
             <Link to="/chat" style={{ textDecoration: 'none' }}>

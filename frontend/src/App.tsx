@@ -7,6 +7,7 @@ import LoadingView from './components/LoadingView'
 import AdminLayout from './layouts/AdminLayout'
 import { AuthProvider } from './lib/auth'
 import AdminChatView from './routes/admin/AdminChatView'
+import AdminNoChatView from './routes/admin/AdminNoChatView'
 import CreateAccount from './routes/auth/CreateAccount'
 import SignIn from './routes/auth/SignIn'
 import SignOut from './routes/auth/SignOut'
@@ -75,7 +76,7 @@ const router = createBrowserRouter([
     children: [
       {
         path: '/admin',
-        element: <h2>Choose a thread.</h2>
+        element: <AdminNoChatView />
       },
       {
         path: '/admin/:threadId',

@@ -53,7 +53,7 @@ function ChatView() {
   return (
     <>
       <DashboardLayout>
-        <Header leaveChat={true}/>
+        <Header leaveChat={true} logoLink="/" />
         {/* <div>
           <p>Your address: {userLocation.address}</p>
         </div> */}

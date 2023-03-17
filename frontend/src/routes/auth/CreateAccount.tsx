@@ -81,6 +81,7 @@ export default function CreateAccount() {
             type="text"
             placeholder="Jane Doe"
             slotProps={{ input: { 'data-testid': 'name' } }}
+            required
           />
         </FormControl>
         <FormControl sx={{ mb: 2 }}>
@@ -90,6 +91,7 @@ export default function CreateAccount() {
             type="email"
             placeholder="janedoe@email.com"
             slotProps={{ input: { 'data-testid': 'email' } }}
+            required
           />
         </FormControl>
         <FormControl sx={{ mb: 2 }}>
@@ -99,6 +101,7 @@ export default function CreateAccount() {
             type="tel"
             placeholder="+1 (877) 393-4448"
             slotProps={{ input: { 'data-testid': 'phone' } }}
+            required
           />
         </FormControl>
         <FormControl sx={{ mb: 2 }}>
@@ -108,6 +111,7 @@ export default function CreateAccount() {
             type="password"
             placeholder="•••••"
             slotProps={{ input: { 'data-testid': 'password' } }}
+            required
           />
         </FormControl>
         <Button

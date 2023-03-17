@@ -49,9 +49,9 @@ function AdminLayout() {
   return (
     <>
       {window.location.pathname === '/admin' ? (
-        <Header leaveChat={false} />
+        <Header leaveChat={false} logoLink="/admin" />
       ) : (
-        <Header leaveChat={true} />
+        <Header leaveChat={true} logoLink="/admin" />
       )}
       <Box sx={{ display: 'flex', flexDirection: 'row', maxWidth: '100vw' }}>
         <ThreadsList threads={threads} />

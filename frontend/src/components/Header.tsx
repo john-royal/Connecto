@@ -10,12 +10,12 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../lib/auth'
 import Logo from '../assets/logo.png'
 
-function Header({leaveChat}) {
+function Header({leaveChat, logoLink}) {
   const { user } = useAuth()
 
   const logo = (
     <Link
-      to="/admin"
+      to={logoLink}
       style={{
         display: 'flex',
         flexDirection: 'row',

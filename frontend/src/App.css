@@ -63,14 +63,9 @@ body {
 
 .JoinChat {
   text-align: center;
-  align-items: center;
-  margin-top: 10%;
-  height: center;
-  width: 100vw;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: black;
+  width: fit-content;
+  margin: auto;
+  margin-top: 12%;
 }
 
 .LeaveChat {
@@ -278,4 +273,16 @@ body {
 
 .bold {
   font-weight: bold;
+}
+
+.chooseThread {
+  color: #59606D;
+  margin-bottom: 25%;
+  border: 5px solid black;
+  width: fit-content;
+  align-items: center;
+  padding: 10px 10px 10px 10px;
+  border: 2px solid #dbdbe2;
+  border-radius: 10px;
+  margin: auto;
 }
