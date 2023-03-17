@@ -27,7 +27,7 @@ router.get('/threads', threadsController.findAll)
 router.post('/threads', threadsController.create)
 router.get('/threads/:id', threadsController.findOne)
 
-router.get("/location", locationController.geocode)
+router.get('/location', locationController.geocode)
 
 router.use(((error, req, res, next) => {
   console.error(error)

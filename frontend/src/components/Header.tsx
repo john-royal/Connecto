@@ -1,16 +1,16 @@
-import '../App.css'
+import Person from '@mui/icons-material/Person'
 import Box from '@mui/joy/Box'
 import IconButton from '@mui/joy/IconButton'
-import Typography from '@mui/joy/Typography'
-import Person from '@mui/icons-material/Person'
 import Menu from '@mui/joy/Menu'
 import MenuItem from '@mui/joy/MenuItem'
-import { useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
-import { useAuth } from '../lib/auth'
+import Typography from '@mui/joy/Typography'
+import { useRef, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import '../App.css'
 import Logo from '../assets/logo.png'
+import { useAuth } from '../lib/auth'
 
-function Header({leaveChat}) {
+function Header({ leaveChat = true }: { leaveChat?: boolean }) {
   const { user } = useAuth()
 
   const logo = (
@@ -32,44 +32,45 @@ function Header({leaveChat}) {
   function HeaderMenu() {
     const anchor = useRef<HTMLAnchorElement | null>(null)
     const [open, setOpen] = useState(false)
+    const navigate = useNavigate()
 
     const handleClose = () => {
       setOpen(false)
     }
 
     function handleLeave() {
-      return (location.href = '/')
+      navigate('/')
     }
 
     return (
       <>
         <div>
-        {leaveChat && (
-          <IconButton
-            id="basic-demo-button"
-            onClick={handleLeave}
-            size="sm"
-            variant="outlined"
-            sx={[
-              {
-                color: '#70ACB1',
-                borderColor: '#70ACB1',
-                backgroundColor: 'white',
-                p: 2,
-                mr: 3,
-                '&:hover': {
-                  backgroundColor: '#C6F1E7'
-                },
-                '&:active': {
-                  color: 'white',
-                  backgroundColor: '#70ACB1'
+          {leaveChat && (
+            <IconButton
+              id="basic-demo-button"
+              onClick={handleLeave}
+              size="sm"
+              variant="outlined"
+              sx={[
+                {
+                  color: '#70ACB1',
+                  borderColor: '#70ACB1',
+                  backgroundColor: 'white',
+                  p: 2,
+                  mr: 3,
+                  '&:hover': {
+                    backgroundColor: '#C6F1E7'
+                  },
+                  '&:active': {
+                    color: 'white',
+                    backgroundColor: '#70ACB1'
+                  }
                 }
-              }
-            ]}
-          >
-            Leave Chat
-          </IconButton>
-        )}
+              ]}
+            >
+              Leave Chat
+            </IconButton>
+          )}
           <IconButton
             id="basic-demo-button"
             aria-controls={open ? 'basic-menu' : undefined}

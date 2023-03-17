@@ -11,6 +11,7 @@ import {
   Link,
   Outlet,
   useLoaderData,
+  useLocation,
   useNavigate,
   useParams
 } from 'react-router-dom'
@@ -29,6 +30,7 @@ interface ThreadPreview {
 function AdminLayout() {
   const { user } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
   const { threads } = useLoaderData() as { threads: ThreadPreview[] }
   const { mutate } = useSWRConfig()
 
@@ -48,11 +50,7 @@ function AdminLayout() {
 
   return (
     <>
-      {window.location.pathname === '/admin' ? (
-        <Header leaveChat={false} />
-      ) : (
-        <Header leaveChat={true} />
-      )}
+      <Header leaveChat={location.pathname === 'admin'} />
       <Box sx={{ display: 'flex', flexDirection: 'row', maxWidth: '100vw' }}>
         <ThreadsList threads={threads} />
         <Box

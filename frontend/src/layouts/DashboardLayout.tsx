@@ -1,6 +1,5 @@
 import { type ReactNode, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import Sidebar from '../components/Sidebar'
 import { useAuth } from '../lib/auth'
 
 interface DashboardLayoutProps {
@@ -8,7 +7,7 @@ interface DashboardLayoutProps {
   sidebarItems?: ReactNode
 }
 
-function DashboardLayout({ children, sidebarItems }: DashboardLayoutProps) {
+function DashboardLayout({ children }: DashboardLayoutProps) {
   const { user } = useAuth()
   const navigate = useNavigate()
 
@@ -18,11 +17,7 @@ function DashboardLayout({ children, sidebarItems }: DashboardLayoutProps) {
     }
   }, [user, navigate])
 
-  return (
-    <div className="App">
-      {children}
-    </div>
-  )
+  return <div className="App">{children}</div>
 }
 
 export default DashboardLayout

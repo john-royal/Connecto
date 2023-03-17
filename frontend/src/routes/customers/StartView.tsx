@@ -26,7 +26,7 @@ function StartView() {
   return (
     <>
       <DashboardLayout>
-        <Header leaveChat={false}/>
+        <Header />
         <div className="JoinChat">
           <Box
             sx={{
