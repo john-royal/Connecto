@@ -14,6 +14,7 @@ if (process.env.NODE_ENV !== 'test') {
 router.use(json())
 router.use(session, helpers)
 router.use(helmet())
+router.use(cors())
 
 router.get('/', (req, res) => res.send('Hello, world!'))
 

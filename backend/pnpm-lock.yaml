@@ -18,6 +18,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.53.0
   argon2: ^0.30.3
   aws-sdk: ^2.1334.0
+  cors: ^2.8.5
   dotenv: ^16.0.3
   eslint: ^8.34.0
   eslint-config-prettier: ^8.6.0
@@ -51,6 +52,7 @@ dependencies:
   '@quixo3/prisma-session-store': 3.1.10_iaef6bhnntkvrvt5gghzns3gha
   argon2: 0.30.3
   aws-sdk: 2.1334.0
+  cors: 2.8.5
   dotenv: 16.0.3
   express: 5.0.0-beta.1
   express-session: 1.17.3
