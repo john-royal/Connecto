@@ -7,7 +7,9 @@
     "dev": "nodemon src/server.ts",
     "lint": "eslint --ext .ts src test",
     "format": "eslint --fix --ext .ts src test",
-    "test": "jest"
+    "test": "jest",
+    "build": "tsc",
+    "start": "node dist/src/server.js"
   },
   "keywords": [],
   "author": "",
