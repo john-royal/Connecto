@@ -17,6 +17,15 @@ router.use(session, helpers)
 router.use(helmet())
 router.use(cors())
 
+router.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  )
+  next()
+})
+
 router.get('/', (req, res) => res.send('Hello, world!'))
 
 router.post('/auth/register', authController.register)
