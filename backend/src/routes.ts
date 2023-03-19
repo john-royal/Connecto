@@ -1,9 +1,10 @@
-import { type ErrorRequestHandler, json, Router } from 'express'
+import cors from 'cors'
+import { json, Router, type ErrorRequestHandler } from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import * as authController from './controllers/auth'
-import * as threadsController from './controllers/threads'
 import * as locationController from './controllers/location'
+import * as threadsController from './controllers/threads'
 import { helpers, session } from './lib/session'
 
 const router = Router()
