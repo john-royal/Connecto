@@ -12,10 +12,12 @@ function StartView() {
   const card = (
     <Card>
       <CardContent>
-        <Typography level="h2" component="div" sx={{ color:"#59606D" }}>
+        <Typography level="h2" component="div" sx={{ color: '#59606D' }}>
           Need help?
         </Typography>
-        <Typography level="h5" sx={{ color:"#59606D" }}>Click here to join a support chat!</Typography>
+        <Typography level="h5" sx={{ color: '#59606D' }}>
+          Click here to join a support chat!
+        </Typography>
         <div className="centerIcon">
           <ContactSupportIcon sx={{ fontSize: 100, color: '#5e8b8f' }} />
         </div>

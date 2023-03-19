@@ -150,7 +150,7 @@ body {
   color: #3d575a;
 }
 
-.attachFileButton button[type=submit] {
+.attachFileButton button {
   position: absolute;
   bottom: 0;
   left: 0;
@@ -163,11 +163,11 @@ body {
   background-color: white;
 }
 
-.attachFileButton button[type=submit]:hover {
+.attachFileButton button:hover {
   color: #8ec2c7;
 }
 
-.attachFileButton button[type=submit]:active {
+.attachFileButton button:active {
   color: #3d575a;
 }
 

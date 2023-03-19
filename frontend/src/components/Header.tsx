@@ -5,22 +5,14 @@ import Menu from '@mui/joy/Menu'
 import MenuItem from '@mui/joy/MenuItem'
 import Typography from '@mui/joy/Typography'
 import { useRef, useState } from 'react'
-import { Link, To, useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import '../App.css'
 import Logo from '../assets/logo.png'
 import { useAuth } from '../lib/auth'
 
 function Header({ leaveChat = true }: { leaveChat?: boolean }) {
   const { user } = useAuth()
-  let logoLink = "/admin"
-
-  window.location.pathname === "/chat" && (
-    logoLink = "/"
-  )
-
-  window.location.pathname === '/' && (
-    logoLink = "/"
-  )
+  const logoLink = user?.isAdmin ?? false ? '/admin' : '/'
 
   const logo = (
     <Link

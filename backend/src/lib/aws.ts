@@ -1,17 +1,20 @@
-import AWS from 'aws-sdk'
+import { S3Client } from '@aws-sdk/client-s3'
+import { SendEmailCommand, SESClient } from '@aws-sdk/client-ses'
 import dotenv from 'dotenv'
 
 dotenv.config()
 
-AWS.config.update({
-  credentials: new AWS.Credentials({
+const configuration = {
+  credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  }),
+  },
   region: process.env.AWS_REGION
-})
+}
 
-const ses = new AWS.SES()
+export const ses = new SESClient(configuration)
+
+export const s3 = new S3Client(configuration)
 
 export async function sendEmail({
   to: destination,
@@ -38,12 +41,8 @@ export async function sendEmail({
       }
     }
   }
+  const command = new SendEmailCommand(emailParams)
   console.dir(emailParams, { depth: null })
-  const data = await new Promise((resolve, reject) => {
-    ses.sendEmail(emailParams, (err, data) => {
-      if (err != null) reject(err)
-      else resolve(data)
-    })
-  })
+  const data = await ses.send(command)
   console.dir(data, { depth: null })
 }

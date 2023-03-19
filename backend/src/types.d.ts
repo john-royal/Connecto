@@ -14,6 +14,7 @@ declare global {
       AWS_SECRET_ACCESS_KEY: string
       AWS_REGION: string
       AWS_SES_SENDER: string
+      AWS_S3_BUCKET: string
       ADMIN_EMAIL: string
       GOOGLE_API_KEY: string
     }

@@ -7,12 +7,19 @@ export interface Message {
   id: string
   user: User
   content: string
+  attachmentUrl?: string
   createdAt: Date
+}
+
+export interface MessageInit {
+  content: string
+  attachment?: File
+  location?: { latitude: number; longitude: number }
 }
 
 export interface Chat {
   messages: Message[]
-  sendMessage: (content: string) => Promise<void>
+  sendMessage: (message: MessageInit) => Promise<void>
 }
 
 export function useChat(threadId: number): Chat {
@@ -69,9 +76,29 @@ export function useChat(threadId: number): Chat {
     }
   }, [socket, user, threadId])
 
-  const sendMessage = async (content: string): Promise<void> => {
+  const sendMessage = async ({
+    content,
+    attachment
+  }: MessageInit): Promise<void> => {
     if (!socket || !user) throw new Error('Not connected to chat')
-    socket.emit('message', content)
+
+    if (attachment != null) {
+      const data = new FormData()
+      data.append('file', attachment)
+      const { attachmentUrl } = await fetch('/api/attachment', {
+        method: 'POST',
+        body: data
+      }).then(async (res) => await res.json())
+      socket.emit('message', {
+        content,
+        attachmentUrl
+      })
+    } else {
+      socket.emit('message', {
+        content
+      })
+    }
+
     await new Promise<void>((resolve, reject) => {
       socket.once('message', () => {
         resolve()

@@ -1,6 +1,13 @@
 import AttachFileIcon from '@mui/icons-material/AttachFile'
 import SendIcon from '@mui/icons-material/Send'
-import { Fragment, useState } from 'react'
+import IconButton from '@mui/joy/IconButton'
+import {
+  Fragment,
+  useRef,
+  useState,
+  type FormEventHandler,
+  type MouseEventHandler
+} from 'react'
 import { useAuth } from '../lib/auth'
 import { useChat } from '../lib/chat'
 
@@ -8,12 +15,22 @@ function MessageContainer({ threadId }: { threadId: number }) {
   const { messages, sendMessage } = useChat(threadId)
   const { user } = useAuth()
   const [inputValue, setInputValue] = useState('')
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    sendMessage(inputValue)
+  const handleUploadButton: MouseEventHandler = (e) => {
+    e.preventDefault()
+    fileInputRef.current?.click()
+  }
+
+  const handleSubmit: FormEventHandler = (e) => {
+    e.preventDefault()
+    sendMessage({
+      content: inputValue,
+      attachment: fileInputRef.current?.files?.[0]
+    })
       .then(() => {
         setInputValue('')
+        ;(fileInputRef.current as HTMLInputElement).value = ''
       })
       .catch((error) => {
         console.error(error)
@@ -33,6 +50,15 @@ function MessageContainer({ threadId }: { threadId: number }) {
               isMe ? (
                 <Fragment key={message.id}>
                   <div className="rightMessageName">{message.user.name}</div>
+                  {message.attachmentUrl != null && (
+                    <div className="rightMessageBubble">
+                      <img
+                        src={message.attachmentUrl}
+                        alt="attachment"
+                        width={100}
+                      />
+                    </div>
+                  )}
                   <div className="rightMessageBubble">
                     <li>{message.content}</li>
                   </div>
@@ -40,6 +66,15 @@ function MessageContainer({ threadId }: { threadId: number }) {
               ) : (
                 <Fragment key={message.id}>
                   <div className="leftMessageName">{message.user.name}</div>
+                  {message.attachmentUrl != null && (
+                    <div className="rightMessageBubble">
+                      <img
+                        src={message.attachmentUrl}
+                        alt="attachment"
+                        width={100}
+                      />
+                    </div>
+                  )}
                   <div className="leftMessageBubble">
                     <li>{message.content}</li>
                   </div>
@@ -50,18 +85,11 @@ function MessageContainer({ threadId }: { threadId: number }) {
       </div>
       <div className="chatInputs">
         <form onSubmit={handleSubmit}>
+          <input accept="image/*" type="file" ref={fileInputRef} hidden />
           <div className="attachFileButton">
-            <button type="submit">
-              <AttachFileIcon
-                sx={{
-                  height: 0.8,
-                  width: 0.9,
-                  minHeight: 20,
-                  minWidth: 20
-                }}
-              />
-              <input hidden accept="image/*" multiple type="file" />
-            </button>
+            <IconButton type="submit" onClick={handleUploadButton}>
+              <AttachFileIcon />
+            </IconButton>
           </div>
           <input
             type="text"

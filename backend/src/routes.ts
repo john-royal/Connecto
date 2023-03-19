@@ -3,7 +3,7 @@ import { json, Router, type ErrorRequestHandler } from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import * as authController from './controllers/auth'
-import * as locationController from './controllers/location'
+import * as helpersController from './controllers/helpers'
 import * as threadsController from './controllers/threads'
 import { helpers, session } from './lib/session'
 
@@ -17,15 +17,6 @@ router.use(session, helpers)
 router.use(helmet())
 router.use(cors())
 
-router.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept'
-  )
-  next()
-})
-
 router.get('/', (req, res) => res.send('Hello, world!'))
 
 router.post('/auth/register', authController.register)
@@ -38,7 +29,8 @@ router.get('/threads', threadsController.findAll)
 router.post('/threads', threadsController.create)
 router.get('/threads/:id', threadsController.findOne)
 
-router.get('/location', locationController.geocode)
+router.get('/location', helpersController.geocode)
+router.post('/attachment', helpersController.upload)
 
 router.use(((error, req, res, next) => {
   console.error(error)
