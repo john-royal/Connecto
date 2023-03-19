@@ -6,12 +6,12 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://connectoapi.johnmroyal.com',
+        target: 'http://localhost:3001',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '')
       },
       '/socket.io': {
-        target: 'https://connectoapi.johnmroyal.com',
+        target: 'http://localhost:3001',
         changeOrigin: true,
         ws: true
       }
