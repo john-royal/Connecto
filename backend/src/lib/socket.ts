@@ -66,7 +66,7 @@ io.on('connection', (socket) => {
         socket.emit('error', { message: 'Unauthorized' })
         return
       }
-      const message = await prisma.message.create({
+      await prisma.message.create({
         data: {
           content,
           attachmentUrl,
@@ -79,7 +79,6 @@ io.on('connection', (socket) => {
         },
         include: { user: true }
       })
-      io.to(threadId.toString()).emit('message', message)
     }
   )
 
