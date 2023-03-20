@@ -25,21 +25,22 @@ const getMessageContent = (email: string): string | null => {
   if (!match?.[1]) return null
 
   const recentReply = match[1]
+  let result = ''
 
   // Split the content into lines
   const lines = recentReply.split(/\r?\n/)
 
   // Filter out the lines that belong to the quoted text
-  const filteredLines = lines.filter((line) => {
-    return (
-      !line.startsWith('>') &&
-      !line.startsWith('On ') &&
-      !line.match(/.*@.*\..*> wrote:/)
+  for (const line of lines) {
+    if (
+      line.startsWith('>') ||
+      (line.startsWith('On') && line.endsWith('wrote:'))
     )
-  })
+      break
+    result += line + '\n'
+  }
 
-  // Join the filtered lines back together
-  return filteredLines.join('\n')
+  return result
 }
 
 export const ses: RequestHandler = async (req, res) => {
