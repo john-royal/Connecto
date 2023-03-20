@@ -47,7 +47,7 @@ export class UserModel implements User {
             break
           }
           case 'P2025':
-            throw new UserError('User not found.')
+            throw new UserError('Invalid username/password.')
         }
       }
       throw error

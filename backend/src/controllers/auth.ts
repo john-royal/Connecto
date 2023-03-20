@@ -25,7 +25,7 @@ export const login: RequestHandler = async (req, res) => {
       await req.logIn(user)
       res.status(200).send({ success: true })
     } else {
-      res.status(401).send({ message: 'Incorrect password.' })
+      res.status(401).send({ message: 'Invalid username/password.' })
     }
   } catch (error) {
     if (error instanceof UserError) {

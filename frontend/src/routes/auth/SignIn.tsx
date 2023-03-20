@@ -37,7 +37,7 @@ export default function SignIn() {
 
     signIn(email, password)
       .catch((error) => {
-        setError("Invalid username/password.")
+        setError(error.message)
       })
       .finally(() => {
         setLoading(false)
