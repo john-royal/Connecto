@@ -35,23 +35,18 @@ prisma.$use(async (params, next) => {
       }
     })
     for (const recipient of recipients) {
-      const CALLBACK_URL = `https://connecto.johnmroyal.com/api/webhooks/textbelt?threadId=${message.threadId}&userId=${recipient.id}`
-      await fetch(
-        `https://textbelt.com/text?replyWebhookUrl=${encodeURIComponent(
-          CALLBACK_URL
-        )}`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            phone: recipient.phone,
-            message: `From ${message.user.name}: ${message.content}`,
-            key: process.env.TEXTBELT_API_KEY
-          })
-        }
-      )
+      const CALLBACK_URL = `https://connecto.johnmroyal.com/api/webhooks/textbelt/${message.threadId}/${recipient.id}`
+      await fetch(`https://textbelt.com/text?replyWebhookUrl=${CALLBACK_URL}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams({
+          phone: recipient.phone,
+          message: `From ${message.user.name}: ${message.content}`,
+          key: process.env.TEXTBELT_API_KEY
+        })
+      })
     }
     try {
       await sendEmail({

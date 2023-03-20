@@ -3,7 +3,7 @@ import prisma from '../lib/prisma'
 import io from '../lib/socket'
 
 export const textbelt: RequestHandler = async (req, res) => {
-  const { threadId, userId } = req.query
+  const { threadId, userId } = req.params
   const { text: content } = req.body
 
   const message = await prisma.message.create({
