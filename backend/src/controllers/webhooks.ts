@@ -8,14 +8,14 @@ import io from '../lib/socket'
 export const ses: RequestHandler = async (req, res) => {
   console.dir(req.body, { depth: null })
 
-  const message = req.body.Message
+  const body = JSON.parse(req.body)
 
-  if (message.eventType === 'SubscriptionConfirmation') {
-    const { SubscribeURL } = message
-    await fetch(SubscribeURL)
+  if (body.Type === 'SubscriptionConfirmation') {
+    await fetch(body.SubscribeURL)
   }
 
-  if (message.eventType === 'Received') {
+  if (body.Type === 'Notification') {
+    const message = JSON.parse(body.Message)
     const { receipt } = message
 
     const params = {
