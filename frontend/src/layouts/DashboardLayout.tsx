@@ -15,6 +15,9 @@ function DashboardLayout({ children }: DashboardLayoutProps) {
     if (user === null) {
       navigate('/sign-in')
     }
+    else if (user?.isAdmin) {
+      navigate('/admin')
+    }
   }, [user, navigate])
 
   return <div className="App">{children}</div>

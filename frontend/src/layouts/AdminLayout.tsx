@@ -38,6 +38,9 @@ function AdminLayout() {
     if (user === null) {
       navigate('/sign-in')
     }
+    else if (!user?.isAdmin) {
+      navigate('/')
+    }
   }, [user, navigate])
 
   if (user === undefined) {
