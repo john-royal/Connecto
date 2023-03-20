@@ -1,5 +1,5 @@
 import cors from 'cors'
-import { json, Router, type ErrorRequestHandler } from 'express'
+import { json, Router, text, type ErrorRequestHandler } from 'express'
 import helmet from 'helmet'
 import morgan from 'morgan'
 import * as authController from './controllers/auth'
@@ -15,6 +15,7 @@ if (process.env.NODE_ENV !== 'test') {
   router.use(morgan('dev'))
 }
 router.use(json())
+router.use(text())
 router.use(session, helpers)
 router.use(helmet())
 router.use(cors())
