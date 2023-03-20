@@ -6,6 +6,8 @@ import prisma from '../lib/prisma'
 import io from '../lib/socket'
 
 export const ses: RequestHandler = async (req, res) => {
+  console.dir(req.body, { depth: null })
+
   const message = req.body.Message
 
   if (message.eventType === 'SubscriptionConfirmation') {
