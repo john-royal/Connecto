@@ -11,15 +11,14 @@ import {
   Link,
   Outlet,
   useLoaderData,
-  useLocation,
   useNavigate,
   useParams
 } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
+import Header from '../components/Header'
 import LoadingView from '../components/LoadingView'
 import { useAuth } from '../lib/auth'
 import { type Message } from '../lib/chat'
-import Header from '../components/Header'
 
 interface ThreadPreview {
   id: number
@@ -30,15 +29,14 @@ interface ThreadPreview {
 function AdminLayout() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const location = useLocation()
   const { threads } = useLoaderData() as { threads: ThreadPreview[] }
   const { mutate } = useSWRConfig()
+  const { threadId } = useParams<{ threadId: string }>()
 
   useEffect(() => {
     if (user === null) {
       navigate('/sign-in')
-    }
-    else if (!user?.isAdmin) {
+    } else if (!(user?.isAdmin ?? false)) {
       navigate('/')
     }
   }, [user, navigate])
@@ -53,7 +51,9 @@ function AdminLayout() {
 
   return (
     <>
-      <Header leaveChat={window.location.pathname !== '/admin'} />
+      <Header
+        leaveChatThreadId={threadId != null ? Number(threadId) : undefined}
+      />
       <Box sx={{ display: 'flex', flexDirection: 'row', maxWidth: '100vw' }}>
         <ThreadsList threads={threads} />
         <Box

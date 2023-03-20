@@ -10,7 +10,7 @@ function ChatView() {
   return (
     <>
       <DashboardLayout>
-        <Header leaveChat />
+        <Header leaveChatThreadId={thread.id} />
         <div className="chatContainer">
           <MessageContainer threadId={thread.id} />
         </div>

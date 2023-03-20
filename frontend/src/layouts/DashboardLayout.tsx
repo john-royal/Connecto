@@ -14,8 +14,7 @@ function DashboardLayout({ children }: DashboardLayoutProps) {
   useEffect(() => {
     if (user === null) {
       navigate('/sign-in')
-    }
-    else if (user?.isAdmin) {
+    } else if (user?.isAdmin ?? false) {
       navigate('/admin')
     }
   }, [user, navigate])

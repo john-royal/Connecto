@@ -4,7 +4,6 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import SendIcon from '@mui/icons-material/Send'
 import IconButton from '@mui/joy/IconButton'
 import {
-  Fragment,
   useRef,
   type ChangeEventHandler,
   type FormEventHandler,

@@ -10,7 +10,7 @@ import '../App.css'
 import Logo from '../assets/logo.png'
 import { useAuth } from '../lib/auth'
 
-function Header({ leaveChat = true }: { leaveChat?: boolean }) {
+function Header({ leaveChatThreadId }: { leaveChatThreadId?: number }) {
   const { user } = useAuth()
   const logoLink = user?.isAdmin ?? false ? '/admin' : '/'
 
@@ -39,14 +39,23 @@ function Header({ leaveChat = true }: { leaveChat?: boolean }) {
       setOpen(false)
     }
 
-    function handleLeave() {
-      navigate('/')
+    const handleLeave = () => {
+      if (leaveChatThreadId == null || user == null) return
+      fetch(`/api/threads/${leaveChatThreadId}`, {
+        method: 'DELETE'
+      })
+        .then(() => {
+          navigate(user.isAdmin ? '/admin' : '/')
+        })
+        .catch((error) => {
+          console.error(error)
+        })
     }
 
     return (
       <>
         <div>
-          {leaveChat && (
+          {leaveChatThreadId != null && (
             <IconButton
               id="basic-demo-button"
               onClick={handleLeave}
