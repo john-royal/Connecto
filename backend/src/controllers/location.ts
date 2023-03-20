@@ -1,13 +1,6 @@
 import axios from 'axios'
 import { type RequestHandler } from 'express'
-import Geocode from 'react-geocode'
-
-Geocode.setApiKey(process.env.GOOGLE_MAPS_API_KEY)
-
-interface Coordinates {
-  latitude: string
-  longitude: string
-}
+import getAddressFromCoordinates, { type Coordinates } from '../lib/geocode'
 
 type CoordinatesRequestHandler = RequestHandler<any, any, any, Coordinates>
 
@@ -26,8 +19,6 @@ export const map: CoordinatesRequestHandler = async (req, res) => {
 
 export const geocode: CoordinatesRequestHandler = async (req, res) => {
   const { latitude, longitude } = req.query
-
-  const response = await Geocode.fromLatLng(latitude, longitude)
-  const address = response.results[0].formatted_address
+  const address = await getAddressFromCoordinates({ latitude, longitude })
   res.send({ address })
 }

@@ -36,6 +36,7 @@ router.get('/location/geocode', locationController.geocode)
 router.get('/location/map', locationController.map)
 router.post('/attachment', helpersController.upload)
 
+router.post('/webhooks/ses', webhooksController.ses)
 router.post('/webhooks/textbelt', webhooksController.textbelt)
 
 router.use(((error, req, res, next) => {
