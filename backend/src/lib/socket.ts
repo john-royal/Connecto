@@ -3,8 +3,6 @@ import { type NextFunction, type Request, type Response } from 'express'
 import { Server } from 'socket.io'
 import prisma from './prisma'
 import { helpers, session } from './session'
-import fetch from 'isomorphic-unfetch'
-import { sendEmail } from './aws'
 
 const io = new Server()
 
@@ -82,42 +80,6 @@ io.on('connection', (socket) => {
         include: { user: true }
       })
       io.to(threadId.toString()).emit('message', message)
-      const recipients = await prisma.user.findMany({
-        where: {
-          AND: [
-            {
-              OR: [{ isAdmin: true }, { threads: { some: { id: threadId } } }]
-            },
-            {
-              NOT: { id: message.user.id }
-            }
-          ]
-        }
-      })
-      for (const recipient of recipients) {
-        await fetch('https://textbelt.com/text', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            phone: recipient.phone,
-            message: `From ${user.name}: ${content}`,
-            key: process.env.TEXTBELT_API_KEY
-          })
-        })
-      }
-      try {
-        await sendEmail({
-          to: recipients.map((r) => r.email),
-          subject: `New message from ${user.name}`,
-          body: `From ${user.name}: ${content}`
-        })
-      } catch (error) {
-        // For sandbox testing, AWS requires that all recipients verify their email addresses.
-        // This catches the error in case someone isn't verified.
-        console.error(error)
-      }
     }
   )
 
