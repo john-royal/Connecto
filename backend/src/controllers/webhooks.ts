@@ -31,13 +31,15 @@ const getMessageContent = (email: string): string | null => {
   const lines = recentReply.split(/\r?\n/)
 
   // Filter out the lines that belong to the quoted text
-  for (const line of lines) {
+  for (let i = 0; i < lines.length; i++) {
     if (
-      line.startsWith('>') ||
-      (line.startsWith('On') && line.endsWith('wrote:'))
+      lines[i].startsWith('>') ||
+      (lines[i].startsWith('On') &&
+        (lines[i].includes(/.*@.*\..*> wrote:/) ||
+          lines[i + 1]?.includes(/.*@.*\..*> wrote:/)))
     )
       break
-    result += line + '\n'
+    result += lines[i] + '\n'
   }
 
   return result
