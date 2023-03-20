@@ -1,5 +1,4 @@
 import { SendEmailCommand } from '@aws-sdk/client-ses'
-import axios from 'axios'
 import { ses } from '../lib/aws'
 import getAddressFromCoordinates from '../lib/geocode'
 import prisma, { type User, type Message } from '../lib/prisma'
@@ -59,8 +58,8 @@ async function forwardMessageViaEmail(
           ${
             message.latitude != null && message.longitude != null
               ? `<p>Location: <a href="https://www.google.com/maps?q=${
-                  message.latitude as number
-                },${message.longitude as number}">${address as string}</a></p>`
+                  message.latitude
+                },${message.longitude}">${address as string}</a></p>`
               : ''
           }
           ${
