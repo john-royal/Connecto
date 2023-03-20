@@ -30,6 +30,7 @@ router.use('/threads', threadsController.enforceAuth)
 router.get('/threads', threadsController.findAll)
 router.post('/threads', threadsController.create)
 router.get('/threads/:id', threadsController.findOne)
+router.delete('/threads/:id', threadsController.close)
 
 router.get('/location/geocode', locationController.geocode)
 router.get('/location/map', locationController.map)
