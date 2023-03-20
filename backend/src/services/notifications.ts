@@ -1,9 +1,12 @@
-import { SendEmailCommand, SendEmailCommandInput } from '@aws-sdk/client-ses'
+import {
+  SendEmailCommand,
+  type SendEmailCommandOutput
+} from '@aws-sdk/client-ses'
+import fetch from 'isomorphic-unfetch'
 import { ses } from '../lib/aws'
 import getAddressFromCoordinates from '../lib/geocode'
-import prisma, { type User, type Message } from '../lib/prisma'
+import prisma, { type Message, type User } from '../lib/prisma'
 import io from '../lib/socket'
-import fetch from 'isomorphic-unfetch'
 
 export default async function onMessageSent({
   id,
@@ -71,12 +74,21 @@ async function forwardMessageViaEmail(
         <footer style="text-align: center; padding: 20px; font-size: 0.8em; color: #999;">&copy; Connecto. All rights reserved.</footer>
       </div>
     `
-  await sendEmail({
+  const result = await sendEmail({
     to: [recipient.email],
     replyTo: [`${threadId}@connecto.johnmroyal.com`],
     subject: `New message from ${message.user.name}`,
     body: emailBody,
     htmlBody
+  })
+  if (result?.MessageId == null) return
+  await prisma.notification.create({
+    data: {
+      type: 'EMAIL',
+      user: { connect: { id: recipient.id } },
+      thread: { connect: { id: threadId } },
+      id: result.MessageId
+    }
   })
 }
 
@@ -92,8 +104,8 @@ async function sendEmail({
   subject: string
   body: string
   htmlBody: string
-}): Promise<void> {
-  const emailParams: SendEmailCommandInput = {
+}): Promise<SendEmailCommandOutput | null> {
+  const command = new SendEmailCommand({
     Source: process.env.AWS_SES_SENDER,
     Destination: {
       ToAddresses: destination
@@ -112,16 +124,46 @@ async function sendEmail({
         }
       }
     }
-  }
-  const command = new SendEmailCommand(emailParams)
-  console.dir(emailParams, { depth: null })
+  })
   try {
-    const data = await ses.send(command)
-    console.dir(data)
+    return await ses.send(command)
   } catch (error) {
     // The SES API returns an error if the email address is not verified (this is a test mode limitation).
     // This is to prevent that from crashing the application.
     console.error(error)
+    return null
+  }
+}
+
+async function sendSMS({
+  phone,
+  message,
+  replyWebhookUrl
+}: {
+  phone: string
+  message: string
+  replyWebhookUrl?: string
+}): Promise<{
+  success: boolean
+  textId: string
+  quotaRemaining: number
+}> {
+  const response = await fetch('https://textbelt.com/text', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: new URLSearchParams({
+      phone,
+      message,
+      key: process.env.TEXTBELT_API_KEY,
+      replyWebhookUrl: replyWebhookUrl as string
+    })
+  })
+  return (await response.json()) as {
+    success: boolean
+    textId: string
+    quotaRemaining: number
   }
 }
 
@@ -130,10 +172,40 @@ async function forwardMessageViaSMS(
   message: Message & { user: User },
   threadId: number
 ): Promise<void> {
-  let content = `From ${message.user.name}: ${message.content}`
+  const replyWebhookUrl = `https://connecto.johnmroyal.com/api/webhooks/textbelt?threadId=${threadId}&userId=${recipient.id}`
+
+  if (
+    (await prisma.notification.count({
+      where: {
+        user: { id: recipient.id },
+        thread: { id: threadId },
+        type: 'SMS'
+      }
+    })) === 0
+  ) {
+    const replyURL = recipient.isAdmin
+      ? `https://connecto.johnmroyal.com/admin/${threadId}`
+      : `https://connecto.johnmroyal.com/chat`
+    const result = await sendSMS({
+      phone: recipient.phone,
+      message: `${message.user.name} sent a message with Connecto! You can reply here or at ${replyURL}.`,
+      replyWebhookUrl
+    })
+    if (result.success) {
+      await prisma.notification.create({
+        data: {
+          type: 'SMS',
+          user: { connect: { id: recipient.id } },
+          thread: { connect: { id: threadId } },
+          id: result.textId
+        }
+      })
+    }
+  }
+  let content = message.content
 
   if (message.attachmentUrl != null) {
-    content += `\nAttachment: ${message.attachmentUrl}`
+    content += `\n\nAttachment: ${message.attachmentUrl}`
   }
 
   if (message.latitude != null && message.longitude != null) {
@@ -141,22 +213,22 @@ async function forwardMessageViaSMS(
       latitude: message.latitude,
       longitude: message.longitude
     })
-    content += `\nLocation: https://www.google.com/maps?q=${message.latitude},${message.longitude} (${address})`
+    content += `\n\nLocation: https://www.google.com/maps?q=${message.latitude},${message.longitude} (${address})`
   }
 
-  const response = await fetch('https://textbelt.com/text', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
-    },
-    body: new URLSearchParams({
-      phone: recipient.phone,
-      message: content,
-      key: process.env.TEXTBELT_API_KEY,
-      replyWebhookUrl: `https://connecto.johnmroyal.com/api/webhooks/textbelt?threadId=${threadId}&userId=${recipient.id}`
-    })
+  const result = await sendSMS({
+    phone: recipient.phone,
+    message: content,
+    replyWebhookUrl
   })
-
-  const data = await response.json()
-  console.log(data)
+  if (result.success) {
+    await prisma.notification.create({
+      data: {
+        type: 'SMS',
+        user: { connect: { id: recipient.id } },
+        thread: { connect: { id: threadId } },
+        id: result.textId
+      }
+    })
+  }
 }
