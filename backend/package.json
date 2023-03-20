@@ -11,10 +11,14 @@
     "build": "tsc",
     "start": "node dist/src/server.js"
   },
+  "prisma": {
+    "seed": "ts-node prisma/seed.ts"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-lex-runtime-v2": "^3.294.0",
     "@aws-sdk/client-s3": "^3.282.0",
     "@aws-sdk/client-ses": "^3.294.0",
     "@aws-sdk/node-http-handler": "^3.32.0",

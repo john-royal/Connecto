@@ -11,10 +11,8 @@ export const enforceAuth: RequestHandler = (req, res, next) => {
 }
 
 export const findAll: RequestHandler = async (req, res) => {
-  const where: Prisma.ThreadWhereInput = {}
-  if (req.user!.isAdmin) {
-    where.isActive = true
-  } else {
+  const where: Prisma.ThreadWhereInput = { isActive: true }
+  if (!req.user!.isAdmin) {
     where.customer = { id: Number(req.user!.id) }
   }
   const threads = await prisma.thread.findMany({
@@ -51,7 +49,13 @@ export const create: RequestHandler = async (req, res) => {
   const userId = Number(req.user!.id)
   const thread = await prisma.thread.create({
     data: {
-      customer: { connect: { id: userId } }
+      customer: { connect: { id: userId } },
+      messages: {
+        create: {
+          content: 'Hi there! How can I help you?',
+          user: { connect: { email: 'connecto@connecto.connecto' } }
+        }
+      }
     },
     include: {
       customer: true

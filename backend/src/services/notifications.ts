@@ -16,6 +16,7 @@ export default async function onMessageSent({
     where: { id },
     include: { user: true }
   })
+
   const recipients = await prisma.user.findMany({
     where: {
       AND: [
@@ -33,6 +34,12 @@ export default async function onMessageSent({
 
   await Promise.all(
     recipients.map(async (recipient: User) => {
+      if (
+        (message.user.email === 'connecto@connecto.connecto' &&
+          recipient.isAdmin) ||
+        recipient.email === 'connecto@connecto.connecto'
+      )
+        return
       await forwardMessageViaSMS(recipient, message, threadId)
       await forwardMessageViaEmail(recipient, message, threadId)
     })
