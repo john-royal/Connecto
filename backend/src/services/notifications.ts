@@ -1,4 +1,4 @@
-import { SendEmailCommand } from '@aws-sdk/client-ses'
+import { SendEmailCommand, SendEmailCommandInput } from '@aws-sdk/client-ses'
 import { ses } from '../lib/aws'
 import getAddressFromCoordinates from '../lib/geocode'
 import prisma, { type User, type Message } from '../lib/prisma'
@@ -73,6 +73,7 @@ async function forwardMessageViaEmail(
     `
   await sendEmail({
     to: [recipient.email],
+    replyTo: [`${threadId}@connecto.johnmroyal.com`],
     subject: `New message from ${message.user.name}`,
     body: emailBody,
     htmlBody
@@ -81,20 +82,23 @@ async function forwardMessageViaEmail(
 
 async function sendEmail({
   to: destination,
+  replyTo,
   subject,
   body,
   htmlBody
 }: {
   to: string[]
+  replyTo?: string[]
   subject: string
   body: string
   htmlBody: string
 }): Promise<void> {
-  const emailParams = {
+  const emailParams: SendEmailCommandInput = {
     Source: process.env.AWS_SES_SENDER,
     Destination: {
       ToAddresses: destination
     },
+    ReplyToAddresses: replyTo,
     Message: {
       Subject: {
         Data: subject

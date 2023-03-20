@@ -6,9 +6,6 @@ import prisma from '../lib/prisma'
 import io from '../lib/socket'
 
 export const ses: RequestHandler = async (req, res) => {
-  console.dir(req.body, { depth: null })
-  console.dir(req.headers)
-
   const body = JSON.parse(req.body)
 
   if (body.Type === 'SubscriptionConfirmation') {
@@ -26,6 +23,8 @@ export const ses: RequestHandler = async (req, res) => {
 
     const data = await s3.send(new GetObjectCommand(params))
     console.dir(data, { depth: null })
+
+    // create message
   }
 
   res.status(200).send({ success: true })
