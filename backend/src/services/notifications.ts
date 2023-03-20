@@ -129,8 +129,7 @@ async function forwardMessageViaSMS(
   let content = `From ${message.user.name}: ${message.content}`
 
   if (message.attachmentUrl != null) {
-    // content += `\nAttachment: ${message.attachmentUrl}`
-    content += '\nAttachment: [link temporarily withheld]'
+    content += `\nAttachment: ${message.attachmentUrl}`
   }
 
   if (message.latitude != null && message.longitude != null) {
@@ -138,8 +137,7 @@ async function forwardMessageViaSMS(
       latitude: message.latitude,
       longitude: message.longitude
     })
-    content += `\nLocation: ${address}`
-    // content += `\nLocation: https://www.google.com/maps?q=${message.latitude},${message.longitude} (${address})`
+    content += `\nLocation: https://www.google.com/maps?q=${message.latitude},${message.longitude} (${address})`
   }
 
   const response = await fetch('https://textbelt.com/text', {
