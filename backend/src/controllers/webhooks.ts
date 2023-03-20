@@ -2,45 +2,20 @@ import { GetObjectCommand } from '@aws-sdk/client-s3'
 import { type RequestHandler } from 'express'
 import fetch from 'isomorphic-unfetch'
 import { s3 } from '../lib/aws'
+import { parseEmail } from '../lib/parse-email'
 import prisma from '../lib/prisma'
 import io from '../lib/socket'
 
-const getThreadId = (email: string): number | null => {
+const getThreadId = async (email: string): Promise<{ id: number }> => {
   const threadIdRegex = /(\d+)@connecto.johnmroyal\.com/
   const threadIdMatch = email.match(threadIdRegex)
-  return threadIdMatch ? parseInt(threadIdMatch[1], 10) : null
-}
-
-const getSenderEmail = (email: string): string | null => {
-  const senderEmailRegex = /From: .*?<(.+?)>/
-  const senderEmailMatch = email.match(senderEmailRegex)
-  return senderEmailMatch ? senderEmailMatch[1] : null
-}
-
-const getMessageContent = (email: string): string | null => {
-  const messageContentRegex =
-    /Content-Type: text\/plain;[\s\S]*?\r?\n\r?\n([\s\S]*?)(?=\r?\n\r?\n--)/
-
-  const match = email.match(messageContentRegex)
-  if (!match?.[1]) return null
-
-  const recentReply = match[1]
-  let result = ''
-
-  // Split the content into lines
-  const lines = recentReply.split(/\r?\n/)
-
-  // Filter out the lines that belong to the quoted text
-  for (const line of lines) {
-    if (
-      line.startsWith('>') ||
-      (line.startsWith('On') && line.endsWith('wrote:'))
-    )
-      break
-    result += line + '\n'
+  if (!threadIdMatch) {
+    throw new Error(`No thread ID found in email "${email}"`)
   }
-
-  return result
+  return await prisma.thread.findUniqueOrThrow({
+    where: { id: Number(threadIdMatch[1]) },
+    select: { id: true }
+  })
 }
 
 export const ses: RequestHandler = async (req, res) => {
@@ -51,31 +26,25 @@ export const ses: RequestHandler = async (req, res) => {
   }
 
   if (body.Type === 'Notification') {
-    const message = JSON.parse(body.Message)
-    const { receipt } = message
+    const { receipt } = JSON.parse(body.Message)
 
-    const params = {
-      Bucket: receipt.action.bucketName,
-      Key: receipt.action.objectKey
-    }
+    const data = await s3.send(
+      new GetObjectCommand({
+        Bucket: receipt.action.bucketName,
+        Key: receipt.action.objectKey
+      })
+    )
+    const email = (await data.Body?.transformToString()) ?? ''
+    const { sender, recipient, date, text } = await parseEmail(email)
 
-    const data = await s3.send(new GetObjectCommand(params))
-    const result = (await data.Body?.transformToString()) ?? ''
+    const thread = await getThreadId(recipient)
 
-    const threadId = getThreadId(result)
-    const senderEmail = getSenderEmail(result)
-    const messageContent = getMessageContent(result)
-
-    if (threadId == null || !senderEmail || !messageContent) {
-      return res.status(400).send({ success: false })
-    }
-
-    // create the message
     const newMessage = await prisma.message.create({
       data: {
-        content: messageContent,
-        thread: { connect: { id: threadId } },
-        user: { connect: { email: senderEmail } }
+        content: text,
+        createdAt: date,
+        thread: { connect: { id: thread.id } },
+        user: { connect: { email: sender } }
       },
       include: { user: true }
     })
