@@ -33,7 +33,6 @@ export const ses: RequestHandler = async (req, res) => {
     const senderEmailRegex = /From: .*?<(.+?)>/
     const senderEmailMatch = result.match(senderEmailRegex)
     const senderEmail = senderEmailMatch ? senderEmailMatch[1] : null
-    const user = await prisma.user.findUnique({ where: { email: senderEmail } })
 
     // retrieve message content
     const messageContentRegex =
@@ -43,12 +42,16 @@ export const ses: RequestHandler = async (req, res) => {
       ? messageContentMatch[1].trim()
       : null
 
+    if (threadId == null || !senderEmail || !messageContent) {
+      return res.status(400).send({ success: false })
+    }
+
     // create the message
     const newMessage = await prisma.message.create({
       data: {
         content: messageContent,
         thread: { connect: { id: threadId } },
-        user: { connect: { id: user?.id } }
+        user: { connect: { email: senderEmail } }
       },
       include: { user: true }
     })
