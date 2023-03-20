@@ -7,6 +7,7 @@ import io from '../lib/socket'
 
 export const ses: RequestHandler = async (req, res) => {
   console.dir(req.body, { depth: null })
+  console.dir(req.headers)
 
   const body = JSON.parse(req.body)
 
