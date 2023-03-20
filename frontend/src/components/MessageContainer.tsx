@@ -4,6 +4,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import SendIcon from '@mui/icons-material/Send'
 import IconButton from '@mui/joy/IconButton'
 import {
+  Fragment,
   useRef,
   type ChangeEventHandler,
   type FormEventHandler,
@@ -135,9 +136,22 @@ const TypingIndicator = ({ user }: { user: { name: string } }) => {
 }
 
 const MessageRow = ({ message, isMe }: { message: Message; isMe: boolean }) => {
+  const formatDate = (timestamp: Date) => {
+    return new Date(timestamp).toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    })
+  }
+
   return (
     <div className={`message ${isMe ? 'message--right' : 'message--left'}`}>
-      <div className="message__name">{message.user.name}</div>
+      <div className="message__name">
+        <div className="bold">{message.user.name}</div>
+        {' - ' + formatDate(message.createdAt)}
+      </div>
       {message.attachmentUrl != null && (
         <img
           src={message.attachmentUrl}
