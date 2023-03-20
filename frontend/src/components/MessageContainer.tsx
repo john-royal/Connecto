@@ -84,12 +84,12 @@ function MessageContainer({ threadId }: { threadId: number }) {
             onChange={handleFileInputChange}
           />
           <div className="attachFileButton">
-            <IconButton type="button" onClick={handleUploadButton}>
+            <IconButton type="button" onClick={handleUploadButton} title="Attach image">
               <AttachFileIcon />
             </IconButton>
           </div>
           <div className="shareLocationButton">
-            <IconButton type="button" onClick={handleLocationButton}>
+            <IconButton type="button" onClick={handleLocationButton} title="Share location">
               <LocationOnIcon />
             </IconButton>
           </div>
