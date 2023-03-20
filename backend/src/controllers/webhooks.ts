@@ -36,7 +36,7 @@ export const ses: RequestHandler = async (req, res) => {
 
     // retrieve message content
     const messageContentRegex =
-      /Content-Type: text\/plain;[\s\S]*?\n\n([\s\S]*?)\n\n--/
+      /Content-Type: text\/plain;[\s\S]*?\r?\n\r?\n((?:.*\r?\n)*?)(?=\r?\n\r?\n(?:On.*\d{4}.*<.*> wrote:|---\s*Reply above this line\s*---|From:|Sent:|To:|Subject:))/i
     const messageContentMatch = result.match(messageContentRegex)
     const messageContent = messageContentMatch
       ? messageContentMatch[1].trim()
