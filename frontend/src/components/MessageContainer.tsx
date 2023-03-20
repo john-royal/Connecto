@@ -1,21 +1,41 @@
+import { LocationOn as LocationOnIcon } from '@mui/icons-material'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import SendIcon from '@mui/icons-material/Send'
 import IconButton from '@mui/joy/IconButton'
 import {
-  Fragment,
   useRef,
-  useState,
+  type ChangeEventHandler,
   type FormEventHandler,
   type MouseEventHandler
 } from 'react'
+import useSWR from 'swr'
 import { useAuth } from '../lib/auth'
-import { useChat } from '../lib/chat'
+import { useChat, type Message } from '../lib/chat'
 
 function MessageContainer({ threadId }: { threadId: number }) {
-  const { messages, sendMessage } = useChat(threadId)
+  const { typing, messages, sendMessage, message, setMessage } =
+    useChat(threadId)
   const { user } = useAuth()
-  const [inputValue, setInputValue] = useState('')
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleFileInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
+    const file = e.target.files?.[0]
+    if (file != null) {
+      setMessage((message) => ({ ...message, attachment: file }))
+    }
+  }
+
+  const handleLocationButton: MouseEventHandler = (e) => {
+    const isLocationAvailable = 'geolocation' in navigator
+    if (!isLocationAvailable) {
+      throw new Error('Location services are not available')
+    }
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords
+      setMessage((message) => ({ ...message, latitude, longitude }))
+    })
+  }
 
   const handleUploadButton: MouseEventHandler = (e) => {
     e.preventDefault()
@@ -24,12 +44,14 @@ function MessageContainer({ threadId }: { threadId: number }) {
 
   const handleSubmit: FormEventHandler = (e) => {
     e.preventDefault()
-    sendMessage({
-      content: inputValue,
-      attachment: fileInputRef.current?.files?.[0]
-    })
+    sendMessage(message)
       .then(() => {
-        setInputValue('')
+        setMessage({
+          content: '',
+          attachment: undefined,
+          latitude: undefined,
+          longitude: undefined
+        })
         ;(fileInputRef.current as HTMLInputElement).value = ''
       })
       .catch((error) => {
@@ -46,56 +68,39 @@ function MessageContainer({ threadId }: { threadId: number }) {
               message,
               isMe: message.user.id === user?.id
             }))
-            .map(({ message, isMe }) =>
-              isMe ? (
-                <Fragment key={message.id}>
-                  <div className="rightMessageName">{message.user.name}</div>
-                  {message.attachmentUrl != null && (
-                    <div className="rightMessageBubble">
-                      <img
-                        src={message.attachmentUrl}
-                        alt="attachment"
-                        width={100}
-                      />
-                    </div>
-                  )}
-                  <div className="rightMessageBubble">
-                    <li>{message.content}</li>
-                  </div>
-                </Fragment>
-              ) : (
-                <Fragment key={message.id}>
-                  <div className="leftMessageName">{message.user.name}</div>
-                  {message.attachmentUrl != null && (
-                    <div className="rightMessageBubble">
-                      <img
-                        src={message.attachmentUrl}
-                        alt="attachment"
-                        width={100}
-                      />
-                    </div>
-                  )}
-                  <div className="leftMessageBubble">
-                    <li>{message.content}</li>
-                  </div>
-                </Fragment>
-              )
-            )}
+            .map(({ message, isMe }) => (
+              <MessageRow message={message} isMe={isMe} key={message.id} />
+            ))}
+          {typing && <TypingIndicator user={typing} />}
         </ul>
       </div>
       <div className="chatInputs">
         <form onSubmit={handleSubmit}>
-          <input accept="image/*" type="file" ref={fileInputRef} hidden />
+          <input
+            accept="image/*"
+            type="file"
+            ref={fileInputRef}
+            hidden
+            onChange={handleFileInputChange}
+          />
           <div className="attachFileButton">
-            <IconButton type="submit" onClick={handleUploadButton}>
+            <IconButton type="button" onClick={handleUploadButton}>
               <AttachFileIcon />
+            </IconButton>
+          </div>
+          <div className="shareLocationButton">
+            <IconButton type="button" onClick={handleLocationButton}>
+              <LocationOnIcon />
             </IconButton>
           </div>
           <input
             type="text"
-            value={inputValue}
+            value={message.content}
             onChange={(event) => {
-              setInputValue(event.target.value)
+              setMessage((message) => ({
+                ...message,
+                content: event.target.value
+              }))
             }}
             required
             placeholder="Enter message"
@@ -115,6 +120,70 @@ function MessageContainer({ threadId }: { threadId: number }) {
         </form>
       </div>
     </>
+  )
+}
+
+const TypingIndicator = ({ user }: { user: { name: string } }) => {
+  return (
+    <div className="message message--left">
+      <div className="message__name">{user.name}</div>
+      <div className="message__bubble">
+        <MoreHorizIcon />
+      </div>
+    </div>
+  )
+}
+
+const MessageRow = ({ message, isMe }: { message: Message; isMe: boolean }) => {
+  return (
+    <div className={`message ${isMe ? 'message--right' : 'message--left'}`}>
+      <div className="message__name">{message.user.name}</div>
+      {message.attachmentUrl != null && (
+        <img
+          src={message.attachmentUrl}
+          alt=""
+          width={200}
+          className="message__image"
+        />
+      )}
+      {message.latitude != null && message.longitude != null && (
+        <LocationPreview
+          latitude={message.latitude}
+          longitude={message.longitude}
+        />
+      )}
+      <div className="message__bubble">{message.content}</div>
+    </div>
+  )
+}
+
+const LocationPreview = ({
+  latitude,
+  longitude
+}: {
+  latitude: number
+  longitude: number
+}) => {
+  const { data: location } = useSWR(
+    `/api/location/geocode?latitude=${latitude}&longitude=${longitude}`,
+    async (url) => await fetch(url).then(async (res) => await res.json())
+  )
+
+  return (
+    <a
+      href={`https://www.google.com/maps?q=${latitude},${longitude}`}
+      target="_blank"
+      rel="noreferrer"
+    >
+      <img
+        src={`/api/location/map?latitude=${latitude}&longitude=${longitude}`}
+        alt="Location Preview"
+        className="message__location-preview"
+      />
+      <div className="message__location-text">
+        {location?.address ?? 'Waiting for Location'}
+      </div>
+    </a>
   )
 }
 

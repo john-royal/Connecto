@@ -1,23 +1,29 @@
 import { useEffect, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
-import { useAuth, type User } from './auth'
 import useSWR from 'swr'
+import { useAuth, type User } from './auth'
 
 export interface Message {
   id: string
   user: User
   content: string
   attachmentUrl?: string
+  latitude?: number
+  longitude?: number
   createdAt: Date
 }
 
 export interface MessageInit {
   content: string
   attachment?: File
-  location?: { latitude: number; longitude: number }
+  latitude?: number
+  longitude?: number
 }
 
 export interface Chat {
+  typing?: { name: string }
+  message: MessageInit
+  setMessage: React.Dispatch<React.SetStateAction<MessageInit>>
   messages: Message[]
   sendMessage: (message: MessageInit) => Promise<void>
 }
@@ -33,6 +39,13 @@ export function useChat(threadId: number): Chat {
         .then(({ thread }) => thread.messages)
     }
   )
+  const [typing, setTyping] = useState<{ name: string } | undefined>(undefined)
+  const [message, setMessage] = useState<MessageInit>({
+    content: '',
+    attachment: undefined,
+    latitude: undefined,
+    longitude: undefined
+  })
   const messages = data ?? []
 
   useEffect(() => {
@@ -45,6 +58,24 @@ export function useChat(threadId: number): Chat {
       setSocket(null)
     }
   }, [threadId])
+
+  useEffect(() => {
+    if (!socket || !user) return
+    else if (message.content === '' && message.attachment == null) {
+      socket.emit('stop typing')
+      return
+    }
+
+    socket.emit('typing')
+
+    const timeout = setTimeout(() => {
+      socket.emit('stop typing')
+    }, 5000)
+
+    return () => {
+      clearTimeout(timeout)
+    }
+  }, [socket, user, message])
 
   useEffect(() => {
     if (!socket || !user) return
@@ -63,6 +94,14 @@ export function useChat(threadId: number): Chat {
       console.log('[socket] received message: ', message)
       void mutate((messages) => [...(messages ?? []), message], false)
     })
+    socket.on('typing', (user?: { name: string }) => {
+      console.log('[socket] received typing: ', typing)
+      setTyping(user)
+    })
+    socket.on('stop typing', () => {
+      console.log('[socket] received stop typing')
+      setTyping(undefined)
+    })
     socket.on('error', (err: Error) => {
       console.error('[socket] error', err)
     })
@@ -78,26 +117,29 @@ export function useChat(threadId: number): Chat {
 
   const sendMessage = async ({
     content,
-    attachment
+    attachment,
+    latitude,
+    longitude
   }: MessageInit): Promise<void> => {
     if (!socket || !user) throw new Error('Not connected to chat')
+
+    let attachmentUrl: string | undefined
 
     if (attachment != null) {
       const data = new FormData()
       data.append('file', attachment)
-      const { attachmentUrl } = await fetch('/api/attachment', {
+      const uploadResult = await fetch('/api/attachment', {
         method: 'POST',
         body: data
       }).then(async (res) => await res.json())
-      socket.emit('message', {
-        content,
-        attachmentUrl
-      })
-    } else {
-      socket.emit('message', {
-        content
-      })
+      attachmentUrl = uploadResult.attachmentUrl
     }
+    socket.emit('message', {
+      content,
+      attachmentUrl,
+      latitude,
+      longitude
+    })
 
     await new Promise<void>((resolve, reject) => {
       socket.once('message', () => {
@@ -109,5 +151,5 @@ export function useChat(threadId: number): Chat {
     })
   }
 
-  return { messages, sendMessage }
+  return { messages, sendMessage, message, setMessage, typing }
 }

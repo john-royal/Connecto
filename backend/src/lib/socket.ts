@@ -49,12 +49,21 @@ io.on('connection', (socket) => {
     'message',
     async ({
       content,
-      attachmentUrl
+      attachmentUrl,
+      latitude,
+      longitude
     }: {
       content: string
       attachmentUrl?: string
+      latitude?: number
+      longitude?: number
     }) => {
-      console.log('Message received: ', { content, attachmentUrl })
+      console.log('Message received: ', {
+        content,
+        attachmentUrl,
+        latitude,
+        longitude
+      })
       if (user == null || threadId == null) {
         socket.emit('error', { message: 'Unauthorized' })
         return
@@ -63,6 +72,8 @@ io.on('connection', (socket) => {
         data: {
           content,
           attachmentUrl,
+          latitude,
+          longitude,
           thread: { connect: { id: threadId } },
           user: {
             connect: { id: user.id }
@@ -109,6 +120,16 @@ io.on('connection', (socket) => {
       }
     }
   )
+
+  socket.on('typing', () => {
+    if (threadId == null) return
+    socket.to(threadId.toString()).emit('typing', user)
+  })
+
+  socket.on('stop typing', () => {
+    if (threadId == null) return
+    socket.to(threadId.toString()).emit('stop typing', user)
+  })
 
   socket.on('disconnect', () => {
     console.log('Client disconnected')

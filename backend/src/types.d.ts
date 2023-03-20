@@ -15,6 +15,7 @@ declare global {
       AWS_REGION: string
       AWS_SES_SENDER: string
       AWS_S3_BUCKET: string
+      GOOGLE_MAPS_API_KEY: string
       ADMIN_EMAIL: string
       GOOGLE_API_KEY: string
     }
