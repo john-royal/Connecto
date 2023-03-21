@@ -33,13 +33,13 @@ const theme = extendTheme({
           800: '#70ACB1',
           900: '#70ACB1',
           solidBg: 'var(--joy-palette-primary-200)',
-          solidHoverBg: 'var(--joy-palette-primary-300)'
+          solidHoverBg: 'var(--joy-palette-primary-300)',
           // solidHoverBg: 'var(--joy-palette-primary-200)',
           // plainActiveBg: 'var(--joy-palette-primary-200)',
           // outlinedBorder: 'var(--joy-palette-secondary-500)',
           // outlinedColor: 'var(--joy-palette-secondary-700)',
           // outlinedActiveBg: 'var(--joy-palette-secondary-100)',
-          // softColor: 'var(--joy-palette-secondary-800)',
+          softColor: 'var(--joy-palette-primary-300)'
           // softBg: 'var(--joy-palette-primary-200)',
           // softActiveBg: 'var(--joy-palette-secondary-300)',
           // plainColor: 'var(--joy-palette-secondary-700)',

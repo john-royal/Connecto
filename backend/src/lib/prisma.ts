@@ -19,7 +19,6 @@ prisma.$use(async (params, next) => {
 
   if (params.model === 'Message' && params.action === 'create') {
     await onMessageSent(result as Message)
-    console.log('replying...')
     await onCreateMessage(result as Message)
   }
   if (params.model === 'Thread' && params.action === 'create') {
