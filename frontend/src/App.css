@@ -271,6 +271,7 @@ body {
 
 .message--right .message__bubble {
   background-color: #c6f1e7;
+  width: fit-content;
 }
 
 .message--left {
@@ -279,6 +280,7 @@ body {
 
 .message--left .message__bubble {
   background-color: #ececec;
+  width: fit-content;
 }
 
 .message--bot .message__bubble{
