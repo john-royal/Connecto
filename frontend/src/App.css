@@ -281,6 +281,11 @@ body {
   background-color: #ececec;
 }
 
+.message--bot .message__bubble{
+  background-color: #dcfbfd;
+  border-color: #b7d5d7;
+}
+
 .bold {
   font-weight: bold;
 }

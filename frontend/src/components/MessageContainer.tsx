@@ -66,10 +66,11 @@ function MessageContainer({ threadId }: { threadId: number }) {
           {messages
             .map((message) => ({
               message,
-              isMe: message.user.id === user?.id
+              isMe: message.user.id === user?.id,
+              isBot: message.user.name === "Janet"
             }))
-            .map(({ message, isMe }) => (
-              <MessageRow message={message} isMe={isMe} key={message.id} />
+            .map(({ message, isMe, isBot }) => (
+              <MessageRow message={message} isMe={isMe} isBot={isBot} key={message.id} />
             ))}
           {typing && <TypingIndicator user={typing} />}
         </ul>
@@ -134,7 +135,7 @@ const TypingIndicator = ({ user }: { user: { name: string } }) => {
   )
 }
 
-const MessageRow = ({ message, isMe }: { message: Message; isMe: boolean }) => {
+const MessageRow = ({ message, isMe, isBot }: { message: Message; isMe: boolean; isBot: boolean }) => {
   const formatDate = (timestamp: Date) => {
     return new Date(timestamp).toLocaleString('en-US', {
       month: '2-digit',
@@ -146,7 +147,7 @@ const MessageRow = ({ message, isMe }: { message: Message; isMe: boolean }) => {
   }
 
   return (
-    <div className={`message ${isMe ? 'message--right' : 'message--left'}`}>
+    <div className={`message ${isMe ? 'message--right' : 'message--left'} ${isBot ? 'message--bot' : null}`}>
       <div className="message__name">
         <div className="bold">{message.user.name}</div>
         {' - ' + formatDate(message.createdAt)}
