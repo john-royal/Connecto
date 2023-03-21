@@ -1,7 +1,6 @@
 import Avatar from '@mui/joy/Avatar'
 import Box from '@mui/joy/Box'
 import List from '@mui/joy/List'
-import ListDivider from '@mui/joy/ListDivider'
 import ListItem from '@mui/joy/ListItem'
 import ListItemButton from '@mui/joy/ListItemButton'
 import ListItemDecorator from '@mui/joy/ListItemDecorator'
