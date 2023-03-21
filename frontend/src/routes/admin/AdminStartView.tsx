@@ -1,6 +1,6 @@
 import '../../App.css'
 
-function AdminNoChatView() {
+function AdminStartView() {
   return (
     <div className="chooseThread">
       <h2>Choose a thread.</h2>
@@ -8,4 +8,4 @@ function AdminNoChatView() {
   )
 }
 
-export default AdminNoChatView
+export default AdminStartView

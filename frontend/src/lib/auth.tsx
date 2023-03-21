@@ -1,5 +1,14 @@
-import { createContext, useContext, type PropsWithChildren } from 'react'
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type PropsWithChildren,
+  type ReactNode
+} from 'react'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import useSWR from 'swr'
+import LoadingView from '../components/LoadingView'
 
 export interface User {
   id: number
@@ -25,7 +34,7 @@ const DEFAULT_AUTH_CONTEXT = {} as Auth // eslint-disable-line @typescript-eslin
 const AuthContext = createContext(DEFAULT_AUTH_CONTEXT)
 
 // Exported with underscores because this is a private context, exported for testing only.
-// The public API consists of the AuthProvider and useAuth hook.
+// The public API consists of the AuthProvider, RequireAuth, and useAuth.
 export { AuthContext as TestAuthContext }
 
 export function AuthProvider({ children }: PropsWithChildren) {
@@ -41,12 +50,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
       }
     }
   )
+  const [params] = useSearchParams()
+  const navigate = useNavigate()
 
   const onSuccess = async () => {
     const user = await mutate()
-    if (user != null) {
-      window.location.href = user.isAdmin ? '/admin' : '/'
-    }
+    if (user == null) return
+    const redirect = params.get('redirect') ?? (user.isAdmin ? '/admin' : '/')
+    navigate(redirect)
   }
 
   const signIn = async (email: string, password: string) => {
@@ -97,6 +108,36 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }
 
   return <AuthContext.Provider value={state}>{children}</AuthContext.Provider>
+}
+
+export function RequireAuth({
+  children,
+  isAdmin
+}: {
+  children: ReactNode
+  isAdmin?: boolean
+}) {
+  const { user } = useAuth()
+  const [isAuthorized, setIsAuthorized] = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
+
+  useEffect(() => {
+    const isAuthorized =
+      user != null && (isAdmin == null || user.isAdmin === isAdmin)
+    setIsAuthorized(isAuthorized)
+    if (user != null && !isAuthorized) {
+      navigate(user.isAdmin ? '/admin' : '/')
+    } else if (user === null) {
+      navigate(`/sign-in?redirect=${location.pathname}`)
+    }
+  }, [user, isAdmin])
+
+  if (isAuthorized) {
+    return <>{children}</>
+  } else {
+    return <LoadingView />
+  }
 }
 
 export function useAuth(): Auth {

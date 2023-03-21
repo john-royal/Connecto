@@ -7,17 +7,10 @@ import ListItemButton from '@mui/joy/ListItemButton'
 import ListItemDecorator from '@mui/joy/ListItemDecorator'
 import Typography from '@mui/joy/Typography'
 import { useEffect } from 'react'
-import {
-  Link,
-  Outlet,
-  useLoaderData,
-  useNavigate,
-  useParams
-} from 'react-router-dom'
+import { Link, Outlet, useParams } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
 import Header from '../components/Header'
-import LoadingView from '../components/LoadingView'
-import { useAuth } from '../lib/auth'
+import { RequireAuth } from '../lib/auth'
 import { type Message } from '../lib/chat'
 
 interface ThreadPreview {
@@ -27,35 +20,15 @@ interface ThreadPreview {
 }
 
 function AdminLayout() {
-  const { user } = useAuth()
-  const navigate = useNavigate()
-  const { threads } = useLoaderData() as { threads: ThreadPreview[] }
-  const { mutate } = useSWRConfig()
   const { threadId } = useParams<{ threadId: string }>()
 
-  useEffect(() => {
-    if (user === null) {
-      navigate('/sign-in')
-    } else if (!(user?.isAdmin ?? false)) {
-      navigate('/')
-    }
-  }, [user, navigate])
-
-  if (user === undefined) {
-    return <LoadingView />
-  }
-
-  threads.forEach((thread) => {
-    void mutate(`/api/threads/${thread.id}`, thread.messages)
-  })
-
   return (
-    <>
+    <RequireAuth isAdmin={true}>
       <Header
         leaveChatThreadId={threadId != null ? Number(threadId) : undefined}
       />
       <Box sx={{ display: 'flex', flexDirection: 'row', maxWidth: '100vw' }}>
-        <ThreadsList threads={threads} />
+        <ThreadsList />
         <Box
           component="main"
           className="Main"
@@ -73,11 +46,30 @@ function AdminLayout() {
           <Outlet />
         </Box>
       </Box>
-    </>
+    </RequireAuth>
   )
 }
 
-function ThreadsList({ threads }: { threads: ThreadPreview[] }) {
+function ThreadsList() {
+  const { data: threads } = useSWR<ThreadPreview[]>(
+    '/api/threads',
+    async (url) => {
+      return await fetch(url)
+        .then(async (res) => await res.json())
+        .then(({ threads }) => threads)
+    }
+  )
+  const { mutate } = useSWRConfig()
+
+  useEffect(() => {
+    if (threads == null) return
+    void Promise.all(
+      threads.map(
+        async (thread) => await mutate(`/api/threads/${thread.id}`, thread)
+      )
+    )
+  }, [threads])
+
   return (
     <Box
       className="Inbox"
@@ -90,7 +82,7 @@ function ThreadsList({ threads }: { threads: ThreadPreview[] }) {
       }}
     >
       <List>
-        {threads.map((item) => (
+        {(threads ?? []).map((item) => (
           <ThreadListRow {...item} key={item.id} />
         ))}
       </List>
@@ -98,18 +90,18 @@ function ThreadsList({ threads }: { threads: ThreadPreview[] }) {
   )
 }
 
-function ThreadListRow({
-  id,
-  customer,
-  messages: initialMessages
-}: ThreadPreview) {
+function ThreadListRow({ id }: ThreadPreview) {
   const params = useParams()
-  const { data } = useSWR<Message[]>(`/api/threads/${id}`, async (url) => {
-    return await fetch(url)
-      .then(async (res) => await res.json())
-      .then(({ thread }) => thread.messages)
-  })
-  const messages = data ?? initialMessages
+  const { data: thread } = useSWR<ThreadPreview>(
+    `/api/threads/${id}`,
+    async (url) => {
+      return await fetch(url)
+        .then(async (res) => await res.json())
+        .then(({ thread }) => thread)
+    }
+  )
+  const customer = thread?.customer
+  const messages = thread?.messages ?? []
   const selected = id === Number(params.threadId)
 
   return (
@@ -124,7 +116,7 @@ function ThreadListRow({
         >
           <ListItemDecorator sx={{ alignSelf: 'flex-start' }}>
             <Avatar sx={{ borderRadius: 'md' }}>
-              {customer.name
+              {customer?.name
                 .split(/\s+/)
                 .map((word) => word[0])
                 .join('')}
@@ -132,7 +124,7 @@ function ThreadListRow({
           </ListItemDecorator>
           <Box sx={{ pl: 2, width: '100%' }}>
             <Box>
-              <Typography sx={{ mb: 0.5 }}>{customer.name}</Typography>
+              <Typography sx={{ mb: 0.5 }}>{customer?.name}</Typography>
               <Typography level="body2">
                 {messages.length === 0
                   ? 'No messages'

@@ -1,5 +1,5 @@
-import { LocationOn as LocationOnIcon } from '@mui/icons-material'
 import AttachFileIcon from '@mui/icons-material/AttachFile'
+import LocationOnIcon from '@mui/icons-material/LocationOn'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import SendIcon from '@mui/icons-material/Send'
 import IconButton from '@mui/joy/IconButton'
@@ -85,12 +85,20 @@ function MessageContainer({ threadId }: { threadId: number }) {
             onChange={handleFileInputChange}
           />
           <div className="attachFileButton">
-            <IconButton type="button" onClick={handleUploadButton} title="Attach image">
+            <IconButton
+              type="button"
+              onClick={handleUploadButton}
+              title="Attach image"
+            >
               <AttachFileIcon />
             </IconButton>
           </div>
           <div className="shareLocationButton">
-            <IconButton type="button" onClick={handleLocationButton} title="Share location">
+            <IconButton
+              type="button"
+              onClick={handleLocationButton}
+              title="Share location"
+            >
               <LocationOnIcon />
             </IconButton>
           </div>

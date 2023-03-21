@@ -31,12 +31,12 @@ export interface Chat {
 export function useChat(threadId: number): Chat {
   const { user } = useAuth()
   const [socket, setSocket] = useState<Socket | null>(null)
-  const { data, mutate } = useSWR<Message[]>(
+  const { data, mutate } = useSWR<{ messages: Message[] }>(
     `/api/threads/${threadId}`,
     async (url: string) => {
       return await fetch(url)
         .then(async (res) => await res.json())
-        .then(({ thread }) => thread.messages)
+        .then(({ thread }) => thread)
     }
   )
   const [typing, setTyping] = useState<{ name: string } | undefined>(undefined)
@@ -46,7 +46,7 @@ export function useChat(threadId: number): Chat {
     latitude: undefined,
     longitude: undefined
   })
-  const messages = data ?? []
+  const messages = data?.messages ?? []
 
   useEffect(() => {
     const newSocket = io()
@@ -92,7 +92,13 @@ export function useChat(threadId: number): Chat {
     })
     socket.on('message', (message: Message) => {
       console.log('[socket] received message: ', message)
-      void mutate((messages) => [...(messages ?? []), message], false)
+      void mutate(
+        (thread) => ({
+          ...thread,
+          messages: [...(thread?.messages ?? []), message]
+        }),
+        false
+      )
     })
     socket.on('typing', (user?: { name: string }) => {
       console.log('[socket] received typing: ', typing)
