@@ -51,7 +51,7 @@ enum NotificationType {
 }
 
 model Notification {
-  id        String           @id
+  id        String           @id @default(uuid())
   createdAt DateTime         @default(now())
   type      NotificationType
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)

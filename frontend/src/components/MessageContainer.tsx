@@ -16,7 +16,7 @@ import { useAuth } from '../lib/auth'
 import { useChat, type Message } from '../lib/chat'
 
 function MessageContainer({ threadId }: { threadId: number }) {
-  const { typing, messages, sendMessage, message, setMessage } =
+  const { completions, typing, messages, sendMessage, message, setMessage } =
     useChat(threadId)
   const { user } = useAuth()
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -80,6 +80,16 @@ function MessageContainer({ threadId }: { threadId: number }) {
               />
             ))}
           {typing && <TypingIndicator user={typing} />}
+          {completions.map((completion, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                sendMessage({ content: completion }).catch(console.error)
+              }}
+            >
+              {completion}
+            </button>
+          ))}
         </ul>
       </div>
       <div className="chatInputs">

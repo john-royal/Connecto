@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/consistent-type-assertions */
 import { type NextFunction, type Request, type Response } from 'express'
 import { Server } from 'socket.io'
+import { onJoinThread } from '../services/chatbot'
 import prisma from './prisma'
 import { helpers, session } from './session'
 
@@ -32,6 +33,7 @@ io.on('connection', (socket) => {
       threadId = id
       await socket.join(threadId.toString())
       socket.emit('joined', { id })
+      await onJoinThread(id)
     }
   })
 

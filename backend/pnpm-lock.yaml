@@ -39,6 +39,7 @@ specifiers:
   helmet: ^6.0.1
   isomorphic-unfetch: ^4.0.2
   jest: ^29.4.3
+  lru-cache: ^8.0.4
   mailparser: ^3.6.4
   morgan: ^1.10.0
   multer: 1.4.5-lts.1
@@ -73,6 +74,7 @@ dependencies:
   express-session: 1.17.3
   helmet: 6.0.1
   isomorphic-unfetch: 4.0.2
+  lru-cache: 8.0.4
   mailparser: 3.6.4
   morgan: 1.10.0
   multer: 1.4.5-lts.1
@@ -5488,6 +5490,11 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       yallist: 4.0.0
+
+  /lru-cache/8.0.4:
+    resolution: {integrity: sha512-E9FF6+Oc/uFLqZCuZwRKUzgFt5Raih6LfxknOSAVTjNkrCZkBf7DQCwJxZQgd9l4eHjIJDGR+E+1QKD1RhThPw==}
+    engines: {node: '>=16.14'}
+    dev: false
 
   /mailparser/3.6.4:
     resolution: {integrity: sha512-4bDgbLdlcBKX8jtVskfn/G93nZo3lf7pyuLbAQ031SHQLihEqxtRwHrb9SXMTqiTkEGlOdpDrZE5uH18O+2A+A==}

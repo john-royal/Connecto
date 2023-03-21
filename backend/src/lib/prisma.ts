@@ -6,7 +6,7 @@ import {
   type User
 } from '@prisma/client'
 import { hash } from 'argon2'
-import { onCreateMessage, onCreateThread } from '../services/chatbot'
+import { onNewMessage, onNewThread } from '../services/chatbot'
 import onMessageSent from '../services/notifications'
 
 const prisma = new PrismaClient()
@@ -18,11 +18,14 @@ prisma.$use(async (params, next) => {
   const result = await next(params)
 
   if (params.model === 'Message' && params.action === 'create') {
-    await onMessageSent(result as Message)
-    await onCreateMessage(result as Message)
+    const message = result as Message
+    await onMessageSent(message)
+    await onNewMessage(message.id, message.threadId)
   }
+
   if (params.model === 'Thread' && params.action === 'create') {
-    await onCreateThread(result as Thread)
+    const id = (result as Thread).id
+    await onNewThread(id)
   }
 
   return result

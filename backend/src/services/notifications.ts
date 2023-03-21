@@ -229,6 +229,7 @@ async function forwardMessageViaSMS(
     message: content,
     replyWebhookUrl
   })
+  console.log(result)
   if (result.success) {
     await prisma.notification.create({
       data: {

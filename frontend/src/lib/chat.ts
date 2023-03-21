@@ -21,6 +21,7 @@ export interface MessageInit {
 }
 
 export interface Chat {
+  completions: string[]
   typing?: { name: string }
   message: MessageInit
   setMessage: React.Dispatch<React.SetStateAction<MessageInit>>
@@ -39,6 +40,7 @@ export function useChat(threadId: number): Chat {
         .then(({ thread }) => thread)
     }
   )
+  const [completions, setCompletions] = useState<string[]>([])
   const [typing, setTyping] = useState<{ name: string } | undefined>(undefined)
   const [message, setMessage] = useState<MessageInit>({
     content: '',
@@ -111,6 +113,14 @@ export function useChat(threadId: number): Chat {
     socket.on('error', (err: Error) => {
       console.error('[socket] error', err)
     })
+    socket.on(
+      'completions',
+      ({ admin, completions }: { admin: boolean; completions: string[] }) => {
+        console.log('[socket] received completions: ', { admin, completions })
+        if (admin !== user.isAdmin) return
+        setCompletions(completions)
+      }
+    )
 
     return () => {
       socket.off('connect')
@@ -140,6 +150,7 @@ export function useChat(threadId: number): Chat {
       }).then(async (res) => await res.json())
       attachmentUrl = uploadResult.attachmentUrl
     }
+    setCompletions([])
     socket.emit('message', {
       content,
       attachmentUrl,
@@ -157,5 +168,12 @@ export function useChat(threadId: number): Chat {
     })
   }
 
-  return { messages, sendMessage, message, setMessage, typing }
+  return {
+    completions: completions ?? [],
+    messages,
+    sendMessage,
+    message,
+    setMessage,
+    typing
+  }
 }
