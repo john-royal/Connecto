@@ -5,6 +5,7 @@ import ListDivider from '@mui/joy/ListDivider'
 import ListItem from '@mui/joy/ListItem'
 import ListItemButton from '@mui/joy/ListItemButton'
 import ListItemDecorator from '@mui/joy/ListItemDecorator'
+import { type SxProps } from '@mui/joy/styles/types'
 import Typography from '@mui/joy/Typography'
 import format from 'date-fns/format'
 import isToday from 'date-fns/isToday'
@@ -82,15 +83,19 @@ function ThreadsList() {
       }}
     >
       <List>
-        {(threads ?? []).map((item) => (
-          <ThreadListRow {...item} key={item.id} />
+        {(threads ?? []).map((item, index) => (
+          <ThreadListRow
+            {...item}
+            key={item.id}
+            sx={index === 0 ? { borderTop: '1px solid' } : {}}
+          />
         ))}
       </List>
     </Box>
   )
 }
 
-function ThreadListRow({ id }: ThreadPreview) {
+function ThreadListRow({ id, sx }: ThreadPreview & { sx?: SxProps }) {
   const params = useParams()
   const { data: thread } = useSWR<ThreadPreview>(
     `/api/threads/${id}`,
@@ -101,61 +106,63 @@ function ThreadListRow({ id }: ThreadPreview) {
     }
   )
   const customer = thread?.customer
-  const message = (thread?.messages ?? [
-    { createdAt: new Date(), content: 'No messages' }
-  ])[0]
-  const selected = id === Number(params.threadId)
+  const isSelected = id === Number(params.threadId)
 
-  const date = new Date(message.createdAt)
+  const messages = thread?.messages ?? []
+  const { createdAt, content } =
+    messages.length > 0
+      ? messages[messages.length - 1]
+      : { createdAt: new Date(), content: 'No messages' }
+  const date = new Date(createdAt)
   const timestamp = isToday(date)
     ? format(date, 'h:mm a')
     : format(date, 'dd/MM/yyyy')
-  const messageContent =
-    message.content.length > 25
-      ? `${message.content.slice(0, 25)}...`
-      : message.content
+  const preview = content.length > 25 ? `${content.slice(0, 25)}...` : content
 
   return (
-    <>
-      <ListItem>
-        <ListItemButton
-          color={selected ? 'primary' : 'neutral'}
-          variant={selected ? 'solid' : 'plain'}
-          sx={{ p: 2 }}
-          component={Link}
-          to={`/admin/${id}`}
-        >
-          <ListItemDecorator sx={{ alignSelf: 'flex-start' }}>
-            <Avatar sx={{ borderRadius: 'md' }}>
-              {customer?.name
-                .split(/\s+/)
-                .map((word) => word[0])
-                .join('')}
-            </Avatar>
-          </ListItemDecorator>
-          <Box sx={{ pl: 2, width: '100%' }}>
-            <Box>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'flex-start'
-                }}
-              >
-                <Typography level="body1" fontWeight="bold">
-                  {customer?.name}
-                </Typography>
-                <Typography level="body3" color="neutral">
-                  {timestamp}
-                </Typography>
-              </Box>
-              <Typography level="body2">{messageContent}</Typography>
+    <ListItem
+      sx={{
+        ...sx,
+        borderBottom: '1px solid',
+        borderColor: 'divider'
+      }}
+    >
+      <ListItemButton
+        color={isSelected ? 'primary' : 'neutral'}
+        variant={isSelected ? 'solid' : 'plain'}
+        sx={{ p: 2 }}
+        component={Link}
+        to={`/admin/${id}`}
+      >
+        <ListItemDecorator sx={{ alignSelf: 'flex-start' }}>
+          <Avatar sx={{ borderRadius: 'md' }}>
+            {customer?.name
+              .split(/\s+/)
+              .map((word) => word[0])
+              .join('')}
+          </Avatar>
+        </ListItemDecorator>
+        <Box sx={{ pl: 2, width: '100%' }}>
+          <Box>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-start'
+              }}
+            >
+              <Typography level="body1" fontWeight="bold">
+                {customer?.name}
+              </Typography>
+              <Typography level="body3" color="neutral">
+                {timestamp}
+              </Typography>
             </Box>
+            <Typography level="body2">{preview}</Typography>
           </Box>
-        </ListItemButton>
-      </ListItem>
-      <ListDivider sx={{ m: 0 }} />
-    </>
+        </Box>
+      </ListItemButton>
+    </ListItem>
   )
 }
 
