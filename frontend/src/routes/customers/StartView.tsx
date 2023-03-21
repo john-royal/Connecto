@@ -4,7 +4,6 @@ import Card from '@mui/joy/Card'
 import CardContent from '@mui/joy/CardContent'
 import Link from '@mui/joy/Link'
 import Typography from '@mui/joy/Typography'
-import { Link as RouterLink } from 'react-router-dom'
 import '../../App.css'
 import Header from '../../components/Header'
 
@@ -16,7 +15,7 @@ function StartView() {
           Need help?
         </Typography>
         <Typography level="h5" sx={{ color: '#59606D' }}>
-          <Link overlay component={RouterLink} to="/chat">
+          <Link href="/chat" overlay>
             Click here to join a support chat!
           </Link>
         </Typography>

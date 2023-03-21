@@ -5,6 +5,7 @@ import {
   StyledEngineProvider
 } from '@mui/joy/styles'
 import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom'
+import LoadingView from './components/LoadingView'
 
 import AdminLayout from './layouts/AdminLayout'
 import DashboardLayout from './layouts/DashboardLayout'
@@ -14,7 +15,7 @@ import AdminStartView from './routes/admin/AdminStartView'
 import CreateAccount from './routes/auth/CreateAccount'
 import SignIn from './routes/auth/SignIn'
 import SignOut from './routes/auth/SignOut'
-import ChatView from './routes/customers/ChatView'
+import ChatView, { loadOrCreateThread } from './routes/customers/ChatView'
 import StartView from './routes/customers/StartView'
 
 const theme = extendTheme({
@@ -52,7 +53,11 @@ const theme = extendTheme({
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Providers />,
+    element: (
+      <AuthProvider>
+        <Outlet />
+      </AuthProvider>
+    ),
     children: [
       {
         path: '/',
@@ -64,6 +69,7 @@ const router = createBrowserRouter([
           },
           {
             path: '/chat',
+            loader: loadOrCreateThread,
             element: <ChatView />
           }
         ]
@@ -98,17 +104,11 @@ const router = createBrowserRouter([
 ])
 
 export default function App() {
-  return <RouterProvider router={router} />
-}
-
-function Providers() {
   return (
     <StyledEngineProvider injectFirst>
       <CssVarsProvider theme={theme}>
         <CssBaseline />
-        <AuthProvider>
-          <Outlet />
-        </AuthProvider>
+        <RouterProvider router={router} fallbackElement={<LoadingView />} />
       </CssVarsProvider>
     </StyledEngineProvider>
   )

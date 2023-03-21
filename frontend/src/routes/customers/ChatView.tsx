@@ -1,24 +1,14 @@
-import { useEffect, useState } from 'react'
-import { redirect } from 'react-router-dom'
+import { redirect, useLoaderData } from 'react-router-dom'
 import '../../App.css'
 import Header from '../../components/Header'
-import LoadingView from '../../components/LoadingView'
 import MessageContainer from '../../components/MessageContainer'
 
 interface Thread {
   id: number
 }
 
-function ChatView() {
-  const [thread, setThread] = useState<Thread | null>(null)
-
-  useEffect(() => {
-    void loadOrCreateThread().then(setThread)
-  }, [])
-
-  if (thread == null) {
-    return <LoadingView />
-  }
+export default function ChatView() {
+  const thread = useLoaderData() as Thread
 
   return (
     <>
@@ -30,7 +20,7 @@ function ChatView() {
   )
 }
 
-const loadOrCreateThread = async () => {
+export const loadOrCreateThread = async () => {
   const existingThreadsResponse = await fetch('/api/threads')
   if (existingThreadsResponse.status === 401) {
     return redirect('/sign-in?redirect=/chat')
@@ -49,5 +39,3 @@ const loadOrCreateThread = async () => {
   const { thread } = await newThreadsResponse.json()
   return thread
 }
-
-export default ChatView
