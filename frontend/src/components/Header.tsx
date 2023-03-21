@@ -54,10 +54,10 @@ function Header({ leaveChatThreadId }: { leaveChatThreadId?: number }) {
 
     return (
       <>
-        <div>
+        <Box sx={{ display: 'flex', gap: 1 }}>
           {leaveChatThreadId != null && (
             <IconButton
-              id="basic-demo-button"
+              id="leave-chat-button"
               onClick={handleLeave}
               size="sm"
               variant="outlined"
@@ -66,8 +66,7 @@ function Header({ leaveChatThreadId }: { leaveChatThreadId?: number }) {
                   color: '#70ACB1',
                   borderColor: '#70ACB1',
                   backgroundColor: 'white',
-                  p: 2,
-                  mr: 3,
+                  p: 1,
                   '&:hover': {
                     backgroundColor: '#C6F1E7'
                   },
@@ -111,7 +110,7 @@ function Header({ leaveChatThreadId }: { leaveChatThreadId?: number }) {
           >
             <Person />
           </IconButton>
-        </div>
+        </Box>
         <Menu
           id="basic-menu"
           placement="bottom-end"
