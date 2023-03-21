@@ -67,7 +67,7 @@ function MessageContainer({ threadId }: { threadId: number }) {
             .map((message) => ({
               message,
               isMe: message.user.id === user?.id,
-              isBot: message.user.name === 'Janet'
+              isBot: message.user.id === 0
             }))
             .map(({ message, isMe, isBot }) => (
               <MessageRow
