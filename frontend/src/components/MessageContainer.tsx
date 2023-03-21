@@ -174,7 +174,7 @@ const MessageRow = ({
       }`}
     >
       <div className="message__name">
-        <div className="bold">{message.user.name}</div>
+        <strong>{message.user.name}</strong>
         {' - ' + formatDate(message.createdAt)}
       </div>
       {message.attachmentUrl != null && (

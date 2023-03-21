@@ -34,12 +34,11 @@ function AdminLayout() {
           className="Main"
           sx={{
             p: 2,
-            overflow: 'scroll',
             flexGrow: 1,
-            height: 'calc(100vh - 65px)',
+            height: 'calc(100vh - 93.5px)',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'flex-end',
+            justifyContent: 'space-around',
             backgroundColor: 'background.level1'
           }}
         >
@@ -72,13 +71,12 @@ function ThreadsList() {
 
   return (
     <Box
-      className="Inbox"
       sx={{
         bgcolor: '#ecfbf8',
         borderRight: '1px solid',
         borderColor: 'divider',
-        position: 'relative',
-        width: '300px'
+        width: '300px',
+        flexShrink: 0
       }}
     >
       <List>
@@ -128,7 +126,7 @@ function ThreadListRow({ id }: ThreadPreview) {
               <Typography level="body2">
                 {messages.length === 0
                   ? 'No messages'
-                  : messages[messages.length - 1].content}
+                  : messages[messages.length - 1].content.slice(0, 50)}
               </Typography>
             </Box>
           </Box>
