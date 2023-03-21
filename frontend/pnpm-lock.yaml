@@ -16,6 +16,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.0.0
   '@typescript-eslint/parser': ^5.54.1
   '@vitejs/plugin-react-swc': ^3.0.0
+  date-fns: ^2.29.3
   eslint: ^8.0.1
   eslint-config-prettier: ^8.7.0
   eslint-config-standard-with-typescript: ^34.0.0
@@ -43,6 +44,7 @@ dependencies:
   '@mui/icons-material': 5.11.11_ao76n7r2cajsoyr3cbwrn7geoi
   '@mui/joy': 5.0.0-alpha.70_xqeqsl5kvjjtyxwyi3jhw3yuli
   '@mui/material': 5.11.12_xqeqsl5kvjjtyxwyi3jhw3yuli
+  date-fns: 2.29.3
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-geocode: 0.2.3
@@ -1564,6 +1566,11 @@ packages:
       whatwg-mimetype: 3.0.0
       whatwg-url: 11.0.0
     dev: true
+
+  /date-fns/2.29.3:
+    resolution: {integrity: sha512-dDCnyH2WnnKusqvZZ6+jA1O51Ibt8ZMRNkDZdyAyK4YfbDwa/cEmuztzG5pk6hqlp9aSBPYcjOlktquahGwGeA==}
+    engines: {node: '>=0.11'}
+    dev: false
 
   /debug/3.2.7:
     resolution: {integrity: sha512-CFjzYYAi4ThfiQvizrFQevTTXHtnCqWfe7x1AhgEscTz6ZbLbfoLRLPugTQyBth6f8ZERVUSyWHFD/7Wu4t1XQ==}

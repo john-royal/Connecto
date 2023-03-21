@@ -3,6 +3,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn'
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import SendIcon from '@mui/icons-material/Send'
 import IconButton from '@mui/joy/IconButton'
+import format from 'date-fns/format'
+import isToday from 'date-fns/isToday'
 import {
   useRef,
   type ChangeEventHandler,
@@ -157,15 +159,10 @@ const MessageRow = ({
   isMe: boolean
   isBot: boolean
 }) => {
-  const formatDate = (timestamp: Date) => {
-    return new Date(timestamp).toLocaleString('en-US', {
-      month: '2-digit',
-      day: '2-digit',
-      year: 'numeric',
-      hour: 'numeric',
-      minute: 'numeric'
-    })
-  }
+  const date = new Date(message.createdAt)
+  const timestamp = isToday(date)
+    ? format(date, 'h:mm a')
+    : format(date, 'dd/MM/yyyy')
 
   return (
     <div
@@ -175,7 +172,7 @@ const MessageRow = ({
     >
       <div className="message__name">
         <strong>{message.user.name}</strong>
-        {' - ' + formatDate(message.createdAt)}
+        {` - ${timestamp}`}
       </div>
       {message.attachmentUrl != null && (
         <img

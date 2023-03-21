@@ -6,6 +6,8 @@ import ListItem from '@mui/joy/ListItem'
 import ListItemButton from '@mui/joy/ListItemButton'
 import ListItemDecorator from '@mui/joy/ListItemDecorator'
 import Typography from '@mui/joy/Typography'
+import format from 'date-fns/format'
+import isToday from 'date-fns/isToday'
 import { useEffect } from 'react'
 import { Link, Outlet, useParams } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
@@ -99,8 +101,19 @@ function ThreadListRow({ id }: ThreadPreview) {
     }
   )
   const customer = thread?.customer
-  const messages = thread?.messages ?? []
+  const message = (thread?.messages ?? [
+    { createdAt: new Date(), content: 'No messages' }
+  ])[0]
   const selected = id === Number(params.threadId)
+
+  const date = new Date(message.createdAt)
+  const timestamp = isToday(date)
+    ? format(date, 'h:mm a')
+    : format(date, 'dd/MM/yyyy')
+  const messageContent =
+    message.content.length > 25
+      ? `${message.content.slice(0, 25)}...`
+      : message.content
 
   return (
     <>
@@ -122,12 +135,21 @@ function ThreadListRow({ id }: ThreadPreview) {
           </ListItemDecorator>
           <Box sx={{ pl: 2, width: '100%' }}>
             <Box>
-              <Typography sx={{ mb: 0.5 }}>{customer?.name}</Typography>
-              <Typography level="body2">
-                {messages.length === 0
-                  ? 'No messages'
-                  : messages[messages.length - 1].content.slice(0, 50)}
-              </Typography>
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start'
+                }}
+              >
+                <Typography level="body1" fontWeight="bold">
+                  {customer?.name}
+                </Typography>
+                <Typography level="body3" color="neutral">
+                  {timestamp}
+                </Typography>
+              </Box>
+              <Typography level="body2">{messageContent}</Typography>
             </Box>
           </Box>
         </ListItemButton>
