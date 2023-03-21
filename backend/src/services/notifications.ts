@@ -8,6 +8,8 @@ import getAddressFromCoordinates from '../lib/geocode'
 import prisma, { type Message, type User } from '../lib/prisma'
 import io from '../lib/socket'
 
+const BOT_USER_ID = 0
+
 export default async function onMessageSent({
   id,
   threadId
@@ -35,9 +37,8 @@ export default async function onMessageSent({
   await Promise.all(
     recipients.map(async (recipient: User) => {
       if (
-        (message.user.email === 'connecto@connecto.connecto' &&
-          recipient.isAdmin) ||
-        recipient.email === 'connecto@connecto.connecto'
+        (message.user.id === BOT_USER_ID && recipient.isAdmin) ||
+        recipient.id === BOT_USER_ID
       )
         return
       await forwardMessageViaSMS(recipient, message, threadId)

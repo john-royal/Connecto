@@ -6,7 +6,7 @@ import {
   type User
 } from '@prisma/client'
 import { hash } from 'argon2'
-import autoReply from '../services/lex'
+import { onCreateMessage, onCreateThread } from '../services/chatbot'
 import onMessageSent from '../services/notifications'
 
 const prisma = new PrismaClient()
@@ -20,7 +20,10 @@ prisma.$use(async (params, next) => {
   if (params.model === 'Message' && params.action === 'create') {
     await onMessageSent(result as Message)
     console.log('replying...')
-    await autoReply(result as Message)
+    await onCreateMessage(result as Message)
+  }
+  if (params.model === 'Thread' && params.action === 'create') {
+    await onCreateThread(result as Thread)
   }
 
   return result

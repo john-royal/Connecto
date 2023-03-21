@@ -6,10 +6,11 @@ const prisma = new PrismaClient()
 const main = async (): Promise<void> => {
   await prisma.user.create({
     data: {
-      name: 'Connecto',
-      email: 'connecto@connecto.connecto',
+      id: 0,
+      name: 'Janet',
+      email: '',
       password: randomBytes(32).toString('hex'),
-      phone: '0000000000',
+      phone: '',
       isAdmin: true
     }
   })

@@ -49,13 +49,7 @@ export const create: RequestHandler = async (req, res) => {
   const userId = Number(req.user!.id)
   const thread = await prisma.thread.create({
     data: {
-      customer: { connect: { id: userId } },
-      messages: {
-        create: {
-          content: 'Hi there! How can I help you?',
-          user: { connect: { email: 'connecto@connecto.connecto' } }
-        }
-      }
+      customer: { connect: { id: userId } }
     },
     include: {
       customer: true

@@ -1,4 +1,3 @@
-import { LexRuntimeV2Client } from '@aws-sdk/client-lex-runtime-v2'
 import { S3Client } from '@aws-sdk/client-s3'
 import { SESClient } from '@aws-sdk/client-ses'
 import dotenv from 'dotenv'
@@ -13,6 +12,5 @@ const configuration = {
   region: process.env.AWS_REGION
 }
 
-export const lex = new LexRuntimeV2Client(configuration)
 export const ses = new SESClient(configuration)
 export const s3 = new S3Client(configuration)
