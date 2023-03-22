@@ -88,21 +88,21 @@ const hasHumanReplies = (
 const key = ({
   id,
   messages,
-  userType
+  type
 }: {
   id: Thread['id']
   messages: ThreadWithCustomerMessages['messages']
-  userType: 'representative' | 'customer'
+  type: 'representative' | 'customer'
 }): string => {
   const messageKey = messages.length > 0 ? messages[messages.length - 1].id : ''
-  return `${id}:${messageKey}`
+  return `${id}:${type}:${messageKey}`
 }
 
 const generateReplySuggestions = async (
   { id, customer, messages }: ThreadWithCustomerMessages,
-  userType: 'representative' | 'customer'
+  type: 'representative' | 'customer'
 ): Promise<string[]> => {
-  const cached = cache.get(key({ id, messages, userType }))
+  const cached = cache.get(key({ id, messages, type }))
   if (cached != null) return cached
   const prompt = `Given the following conversation between a user and a customer service agent, provide up to 3 suggested replies for the ${userType}.
         
@@ -136,7 +136,7 @@ const generateReplySuggestions = async (
   })
   const json = response.data.choices[0].message?.content
   const completions = json != null ? JSON.parse(json) : []
-  cache.set(key({ id, messages }), completions)
+  cache.set(key({ id, messages, type }), completions)
   console.log({ prompt, completions })
   return completions
 }
