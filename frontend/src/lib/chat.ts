@@ -94,6 +94,7 @@ export function useChat(threadId: number): Chat {
     })
     socket.on('message', (message: Message) => {
       console.log('[socket] received message: ', message)
+      if (messages.some((m) => m.id === message.id)) return
       void mutate(
         (thread) => ({
           ...thread,
