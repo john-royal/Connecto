@@ -104,7 +104,7 @@ const generateReplySuggestions = async (
 ): Promise<string[]> => {
   const cached = cache.get(key({ id, messages, type }))
   if (cached != null) return cached
-  const prompt = `Given the following conversation between a user and a customer service agent, provide up to 3 suggested replies for the ${userType}.
+  const prompt = `Given the following conversation between a user and a customer service agent, provide up to 3 suggested replies for the ${type}.
         
         Our customer service chat is used for queries such as help with a product and resolving order issues.
         Your suggestions should be polite but concise — preferably no more than one sentence.
