@@ -253,3 +253,11 @@ body {
   border-radius: 10px;
   margin: auto;
 }
+
+.ai-suggestions {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  gap: 1%;
+  max-width: 95%;
+}
