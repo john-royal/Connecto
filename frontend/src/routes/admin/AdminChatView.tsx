@@ -3,11 +3,12 @@ import '../../App.css'
 import MessageContainer from '../../components/MessageContainer'
 
 function AdminChatView() {
-  const { threadId } = useParams<{ threadId: string }>()
+  const params = useParams<{ threadId: string }>()
+  const threadId = Number(params.threadId)
 
   return (
     <div className="adminChatContainer">
-      <MessageContainer threadId={Number(threadId)} />
+      <MessageContainer threadId={threadId} key={threadId} />
     </div>
   )
 }
