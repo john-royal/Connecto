@@ -115,7 +115,7 @@ function ThreadListRow({ id, sx }: ThreadPreview & { sx?: SxProps }) {
   const date = new Date(createdAt)
   const timestamp = isToday(date)
     ? format(date, 'h:mm a')
-    : format(date, 'dd/MM/yyyy')
+    : format(date, 'MM/dd/yyyy')
   const preview = content.length > 25 ? `${content.slice(0, 25)}...` : content
 
   return (

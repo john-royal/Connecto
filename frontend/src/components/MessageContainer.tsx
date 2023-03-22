@@ -189,7 +189,7 @@ const MessageRow = ({
   const date = new Date(message.createdAt)
   const timestamp = isToday(date)
     ? format(date, 'h:mm a')
-    : format(date, 'dd/MM/yyyy')
+    : format(date, 'MM/dd/yyyy')
 
   return (
     <div
