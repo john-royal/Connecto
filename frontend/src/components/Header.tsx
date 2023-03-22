@@ -57,25 +57,22 @@ function Header({ leaveChatThreadId }: { leaveChatThreadId?: number }) {
         <Box sx={{ display: 'flex', gap: 1 }}>
           {leaveChatThreadId != null && (
             <IconButton
-              id="leave-chat-button"
               onClick={handleLeave}
               size="sm"
               variant="outlined"
-              sx={[
-                {
-                  color: '#70ACB1',
-                  borderColor: '#70ACB1',
-                  backgroundColor: 'white',
-                  p: 1,
-                  '&:hover': {
-                    backgroundColor: '#C6F1E7'
-                  },
-                  '&:active': {
-                    color: 'white',
-                    backgroundColor: '#70ACB1'
-                  }
+              sx={{
+                color: '#70ACB1',
+                borderColor: '#70ACB1',
+                backgroundColor: 'white',
+                p: 1,
+                '&:hover': {
+                  backgroundColor: '#C6F1E7'
+                },
+                '&:active': {
+                  color: 'white',
+                  backgroundColor: '#70ACB1'
                 }
-              ]}
+              }}
             >
               Leave Chat
             </IconButton>
@@ -90,21 +87,19 @@ function Header({ leaveChatThreadId }: { leaveChatThreadId?: number }) {
             }}
             size="sm"
             variant="outlined"
-            sx={[
-              {
-                color: '#70ACB1',
-                borderColor: '#70ACB1',
-                backgroundColor: 'white',
-                p: 1,
-                '&:hover': {
-                  backgroundColor: '#C6F1E7'
-                },
-                '&:active': {
-                  color: 'white',
-                  backgroundColor: '#70ACB1'
-                }
+            sx={{
+              color: '#70ACB1',
+              borderColor: '#70ACB1',
+              backgroundColor: 'white',
+              p: 1,
+              '&:hover': {
+                backgroundColor: '#C6F1E7'
+              },
+              '&:active': {
+                color: 'white',
+                backgroundColor: '#70ACB1'
               }
-            ]}
+            }}
             aria-label="Me"
             ref={anchor}
           >

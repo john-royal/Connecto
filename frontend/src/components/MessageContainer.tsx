@@ -82,36 +82,26 @@ function MessageContainer({ threadId }: { threadId: number }) {
           {typing && <TypingIndicator user={typing} />}
           <div className="ai-suggestions">
             {completions.map((completion, i) => (
-              // <button
-              //   key={i}
-              //   onClick={() => {
-              //     sendMessage({ content: completion }).catch(console.error)
-              //   }}
-              // >
-              //   {completion}
-              // </button>
               <IconButton
-                id="leave-chat-button"
+                key={i}
                 onClick={() => {
                   sendMessage({ content: completion }).catch(console.error)
                 }}
                 size="sm"
                 variant="outlined"
-                sx={[
-                  {
-                    color: '#70ACB1',
-                    borderColor: '#70ACB1',
-                    backgroundColor: 'white',
-                    p: 1,
-                    '&:hover': {
-                      backgroundColor: '#C6F1E7'
-                    },
-                    '&:active': {
-                      color: 'white',
-                      backgroundColor: '#70ACB1'
-                    }
+                sx={{
+                  color: '#70ACB1',
+                  borderColor: '#70ACB1',
+                  backgroundColor: 'white',
+                  p: 1,
+                  '&:hover': {
+                    backgroundColor: '#C6F1E7'
+                  },
+                  '&:active': {
+                    color: 'white',
+                    backgroundColor: '#70ACB1'
                   }
-                ]}
+                }}
               >
                 {completion}
               </IconButton>
