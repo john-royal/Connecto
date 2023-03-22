@@ -4,7 +4,6 @@ import fetch from 'isomorphic-unfetch'
 import { s3 } from '../lib/aws'
 import { parseEmail } from '../lib/parse-email'
 import prisma from '../lib/prisma'
-import io from '../lib/socket'
 
 const getThreadId = async (email: string): Promise<{ id: number }> => {
   const threadIdRegex = /(\d+)@connecto.johnmroyal\.com/
@@ -58,7 +57,7 @@ export const textbelt: RequestHandler = async (req, res) => {
   const { threadId, userId } = req.query
   const { text: content } = req.body
 
-  const message = await prisma.message.create({
+  await prisma.message.create({
     data: {
       content,
       thread: { connect: { id: Number(threadId) } },
@@ -66,6 +65,5 @@ export const textbelt: RequestHandler = async (req, res) => {
     },
     include: { user: true }
   })
-  io.to(threadId as string).emit('message', message)
   res.status(201).send({ success: true })
 }
