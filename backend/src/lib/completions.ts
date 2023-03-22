@@ -88,24 +88,33 @@ const hasHumanReplies = (
 const key = ({
   id,
   messages,
-  type
+  admin
 }: {
   id: Thread['id']
   messages: ThreadWithCustomerMessages['messages']
-  type: 'representative' | 'customer'
+  admin: boolean
 }): string => {
   const messageKey = messages.length > 0 ? messages[messages.length - 1].id : ''
-  return `${id}:${type}:${messageKey}`
+  return `${id}:${admin ? 'representative' : 'customer'}:${messageKey}`
 }
 
 const generateReplySuggestions = async (
   { id, messages }: ThreadWithCustomerMessages,
-  type: 'representative' | 'customer'
+  admin: boolean
 ): Promise<string[]> => {
-  const cached = cache.get(key({ id, messages, type }))
+  console.log('generating reply suggestions...')
+  const cached = cache.get(key({ id, messages, admin }))
   if (cached != null) return cached
-  const prompt = `Given the following conversation between a user and a customer service agent, provide up to 3 suggested replies for the ${type}.
-        
+  let prompt = ''
+  if (admin) {
+    prompt =
+      'You’re a customer service representative, and you’re using Connecto’s customer service chat to help customers with their orders.'
+  } else {
+    prompt =
+      'You’re a customer, and you’re using Connecto’s customer service chat to get help with your order.'
+  }
+  prompt += ` Please provide up to three suggestions for the next message.
+  
   Our customer service chat is used for queries such as help with a product and resolving order issues.
   Your suggestions should be polite but concise — preferably no more than one sentence.
   Your suggestions must be relevant as replies to the previous message. Avoid simply repeating or continuing the previous message.
@@ -123,22 +132,26 @@ const generateReplySuggestions = async (
   Feel free to return fewer than 3 suggestions if you can’t think of any more. If you can’t think of any suggestions, return an empty array.
       
   Suggestions:`
-  const response = await openai.createChatCompletion({
-    model: 'gpt-3.5-turbo',
-    temperature: 0.5,
-    top_p: 0.5,
-    messages: [
-      {
-        role: ChatCompletionRequestMessageRoleEnum.System,
-        content: prompt
-      }
-    ]
-  })
-  const json = response.data.choices[0].message?.content
-  console.log({ prompt, json })
-  const completions = json != null ? JSON.parse(json) : []
-  cache.set(key({ id, messages, type }), completions)
-  return completions
+  try {
+    const response = await openai.createChatCompletion({
+      model: 'gpt-3.5-turbo',
+      temperature: 0.5,
+      top_p: 0.5,
+      messages: [
+        {
+          role: ChatCompletionRequestMessageRoleEnum.System,
+          content: prompt
+        }
+      ]
+    })
+    const json = response.data.choices[0].message?.content
+    console.log({ prompt, json })
+    const completions = json != null ? JSON.parse(json) : []
+    cache.set(key({ id, messages, admin }), completions)
+    return completions
+  } catch (error) {
+    return []
+  }
 }
 
 export {

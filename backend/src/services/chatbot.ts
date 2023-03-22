@@ -33,10 +33,7 @@ const emitReplySuggestions = async (threadId: Thread['id']): Promise<void> => {
     thread.messages.length > 0
       ? !thread.messages[thread.messages.length - 1].user.isAdmin
       : false
-  const completions = await generateReplySuggestions(
-    thread,
-    admin ? 'representative' : 'customer'
-  )
+  const completions = await generateReplySuggestions(thread, admin)
   io.to(`${threadId}`).emit('completions', {
     admin,
     completions
@@ -47,6 +44,7 @@ async function onNewThread(id: Thread['id']): Promise<void> {
   io.to(`${id}`).emit('typing', BOT_USER)
   const thread = await fetchThread(id)
   const greetingMessage = await generateBotReply(thread)
+  io.to(`${id}`).emit('stop typing', BOT_USER)
   if (greetingMessage != null) {
     await prisma.message.create({
       data: {
@@ -56,7 +54,6 @@ async function onNewThread(id: Thread['id']): Promise<void> {
       }
     })
   }
-  io.to(`${id}`).emit('stop typing', BOT_USER)
 }
 
 async function onNewMessage(
@@ -71,6 +68,7 @@ async function onNewMessage(
     io.to(`${threadId}`).emit('typing', BOT_USER)
     const thread = await fetchThread(threadId)
     const content = await generateBotReply(thread)
+    io.to(`${threadId}`).emit('stop typing', BOT_USER)
     if (content != null) {
       await prisma.message.create({
         data: {
@@ -80,7 +78,6 @@ async function onNewMessage(
         }
       })
     }
-    io.to(`${threadId}`).emit('stop typing', BOT_USER)
   }
   await emitReplySuggestions(threadId)
 }
