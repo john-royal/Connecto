@@ -29,12 +29,16 @@ const fetchThread = async (
 
 const emitReplySuggestions = async (threadId: Thread['id']): Promise<void> => {
   const thread = await fetchThread(threadId)
-  const completions = await generateReplySuggestions(thread)
+  const admin =
+    thread.messages.length > 0
+      ? !thread.messages[thread.messages.length - 1].user.isAdmin
+      : false
+  const completions = await generateReplySuggestions(
+    thread,
+    admin ? 'representative' : 'customer'
+  )
   io.to(`${threadId}`).emit('completions', {
-    admin:
-      thread.messages.length > 0
-        ? !thread.messages[thread.messages.length - 1].user.isAdmin
-        : false,
+    admin,
     completions
   })
 }

@@ -87,20 +87,23 @@ const hasHumanReplies = (
 
 const key = ({
   id,
-  messages
-}: Pick<ThreadWithCustomerMessages, 'id' | 'messages'>): string => {
+  messages,
+  userType
+}: {
+  id: Thread['id']
+  messages: ThreadWithCustomerMessages['messages']
+  userType: 'representative' | 'customer'
+}): string => {
   const messageKey = messages.length > 0 ? messages[messages.length - 1].id : ''
   return `${id}:${messageKey}`
 }
 
-const generateReplySuggestions = async ({
-  id,
-  customer,
-  messages
-}: ThreadWithCustomerMessages): Promise<string[]> => {
-  const cached = cache.get(key({ id, messages }))
+const generateReplySuggestions = async (
+  { id, customer, messages }: ThreadWithCustomerMessages,
+  userType: 'representative' | 'customer'
+): Promise<string[]> => {
+  const cached = cache.get(key({ id, messages, userType }))
   if (cached != null) return cached
-  const userType = customer.isAdmin ? 'representative' : 'customer'
   const prompt = `Given the following conversation between a user and a customer service agent, provide up to 3 suggested replies for the ${userType}.
         
         Our customer service chat is used for queries such as help with a product and resolving order issues.
