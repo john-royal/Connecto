@@ -87,39 +87,42 @@ const hasHumanReplies = (
 
 const key = ({
   id,
-  messages
-}: Pick<ThreadWithCustomerMessages, 'id' | 'messages'>): string => {
+  messages,
+  type
+}: {
+  id: Thread['id']
+  messages: ThreadWithCustomerMessages['messages']
+  type: 'representative' | 'customer'
+}): string => {
   const messageKey = messages.length > 0 ? messages[messages.length - 1].id : ''
-  return `${id}:${messageKey}`
+  return `${id}:${type}:${messageKey}`
 }
 
-const generateReplySuggestions = async ({
-  id,
-  customer,
-  messages
-}: ThreadWithCustomerMessages): Promise<string[]> => {
-  const cached = cache.get(key({ id, messages }))
+const generateReplySuggestions = async (
+  { id, messages }: ThreadWithCustomerMessages,
+  type: 'representative' | 'customer'
+): Promise<string[]> => {
+  const cached = cache.get(key({ id, messages, type }))
   if (cached != null) return cached
-  const userType = customer.isAdmin ? 'representative' : 'customer'
-  const prompt = `Given the following conversation between a user and a customer service agent, provide up to 3 suggested replies for the ${userType}.
+  const prompt = `Given the following conversation between a user and a customer service agent, provide up to 3 suggested replies for the ${type}.
         
-        Our customer service chat is used for queries such as help with a product and resolving order issues.
-        Your suggestions should be polite but concise — preferably no more than one sentence.
-        Your suggestions must be relevant as replies to the previous message. Avoid simply repeating or continuing the previous message.
-        
-        Here is the conversation:
-        ${messages
-          .map(
-            ({ content, user }) =>
-              `${user.isAdmin ? 'Representative' : 'Customer'}: ${content}`
-          )
-          .join('\n')}
-        
-        Format your response as JSON array of strings. For example, ["I’d like to change my shipping address.", "What is your return policy?", "How do I cancel my subscription?"]
-        
-        Feel free to return fewer than 3 suggestions if you can’t think of any more. If you can’t think of any suggestions, return an empty array.
-        
-        Response:`
+  Our customer service chat is used for queries such as help with a product and resolving order issues.
+  Your suggestions should be polite but concise — preferably no more than one sentence.
+  Your suggestions must be relevant as replies to the previous message. Avoid simply repeating or continuing the previous message.
+  
+  Here is the conversation:
+  ${messages
+    .map(
+      ({ content, user }) =>
+        `${user.isAdmin ? 'Representative' : 'Customer'}: ${content}`
+    )
+    .join('\n')}
+  
+  Format your suggestions as JSON array of strings. For example, ["I’d like to change my shipping address.", "What is your return policy?", "How do I cancel my subscription?"]
+  
+  Feel free to return fewer than 3 suggestions if you can’t think of any more. If you can’t think of any suggestions, return an empty array.
+      
+  Suggestions:`
   const response = await openai.createChatCompletion({
     model: 'gpt-3.5-turbo',
     temperature: 0.5,
@@ -132,9 +135,9 @@ const generateReplySuggestions = async ({
     ]
   })
   const json = response.data.choices[0].message?.content
+  console.log({ prompt, json })
   const completions = json != null ? JSON.parse(json) : []
-  cache.set(key({ id, messages }), completions)
-  console.log({ prompt, completions })
+  cache.set(key({ id, messages, type }), completions)
   return completions
 }
 
