@@ -35,6 +35,8 @@ router.delete('/threads/:id', threadsController.close)
 
 router.get('/location/geocode', locationController.geocode)
 router.get('/location/map', locationController.map)
+
+router.get('/avatar/:id', helpersController.avatar)
 router.post('/attachment', helpersController.upload)
 
 router.post('/webhooks/ses', webhooksController.ses)

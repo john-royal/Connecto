@@ -134,8 +134,12 @@ function ThreadListRow({ id, sx }: ThreadPreview & { sx?: SxProps }) {
         to={`/admin/${id}`}
       >
         <ListItemDecorator sx={{ alignSelf: 'flex-start' }}>
-          <Avatar sx={{ borderRadius: 'md' }}>
-            {customer?.name
+          <Avatar
+            sx={{ borderRadius: 'md' }}
+            alt={customer.name}
+            src={`/api/avatar/${customer?.id}`}
+          >
+            {customer.name
               .split(/\s+/)
               .map((word) => word[0])
               .join('')}
