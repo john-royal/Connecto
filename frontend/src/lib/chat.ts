@@ -57,7 +57,9 @@ export function useChat(threadId: number): Chat {
     longitude: undefined
   })
   const swrConfig = useSWRConfig()
-  const messages = data?.messages ?? []
+  const messages = (data?.messages ?? []).sort(
+    (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+  )
 
   useEffect(() => {
     const newSocket = io()
@@ -109,7 +111,11 @@ export function useChat(threadId: number): Chat {
           return {
             ...thread,
             updatedAt: message.createdAt,
-            messages: [...(thread?.messages ?? []), message]
+            messages: [...(thread?.messages ?? []), message].sort(
+              (a, b) =>
+                new Date(a.createdAt).getTime() -
+                new Date(b.createdAt).getTime()
+            )
           }
         }, false)
       }
