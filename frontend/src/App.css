@@ -174,7 +174,7 @@ body {
 .message {
   height: auto;
   width: fit-content;
-  max-width: 40%;
+  max-width: calc(max(40%, 200px));
   overflow-wrap: break-word;
   list-style-type: none;
   margin-bottom: 12px;
@@ -216,6 +216,11 @@ body {
   margin-left: auto;
   margin-right: 50px;
   text-align: right;
+}
+
+.message--right * {
+  margin-left: auto;
+  margin-right: 0;
 }
 
 .message--right .message__name {
