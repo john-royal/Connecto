@@ -5,11 +5,13 @@ import { s3 } from '../lib/aws'
 import { parseEmail } from '../lib/parse-email'
 import prisma from '../lib/prisma'
 
-const getThreadId = async (email: string): Promise<{ id: number }> => {
+const getThreadId = async (
+  email: string
+): Promise<{ id: number } | undefined> => {
   const threadIdRegex = /(\d+)@connecto.johnmroyal\.com/
   const threadIdMatch = email.match(threadIdRegex)
   if (!threadIdMatch) {
-    throw new Error(`No thread ID found in email "${email}"`)
+    return
   }
   return await prisma.thread.findUniqueOrThrow({
     where: { id: Number(threadIdMatch[1]) },
@@ -36,7 +38,15 @@ export const ses: RequestHandler = async (req, res) => {
     const email = (await data.Body?.transformToString()) ?? ''
     const { sender, recipient, date, text } = await parseEmail(email)
 
-    const thread = await getThreadId(recipient)
+    let thread = await getThreadId(recipient)
+
+    if (thread == null) {
+      thread = await prisma.thread.create({
+        data: {
+          customer: { connect: { email: sender } }
+        }
+      })
+    }
 
     const newMessage = await prisma.message.create({
       data: {
