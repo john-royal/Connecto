@@ -13,13 +13,7 @@ import { Link, Outlet, useParams } from 'react-router-dom'
 import useSWR, { useSWRConfig } from 'swr'
 import Header from '../components/Header'
 import { RequireAuth } from '../lib/auth'
-import { type Message } from '../lib/chat'
-
-interface ThreadPreview {
-  id: number
-  customer: { id: number; name: string }
-  messages: Message[]
-}
+import { type Thread } from '../lib/chat'
 
 function AdminLayout() {
   const { threadId } = useParams<{ threadId: string }>()
@@ -52,13 +46,14 @@ function AdminLayout() {
 }
 
 function ThreadsList() {
-  const { data: threads } = useSWR<ThreadPreview[]>(
+  const { data: threads } = useSWR<Thread[]>(
     '/api/threads',
     async (url) => {
       return await fetch(url)
         .then(async (res) => await res.json())
         .then(({ threads }) => threads)
-    }
+    },
+    { refreshInterval: 30 * 1000 }
   )
   const { mutate } = useSWRConfig()
 
@@ -94,25 +89,19 @@ function ThreadsList() {
   )
 }
 
-function ThreadListRow({ id, sx }: ThreadPreview & { sx?: SxProps }) {
+function ThreadListRow({
+  id,
+  messages,
+  customer,
+  updatedAt,
+  sx
+}: Thread & { sx?: SxProps }) {
   const params = useParams()
-  const { data: thread } = useSWR<ThreadPreview>(
-    `/api/threads/${id}`,
-    async (url) => {
-      return await fetch(url)
-        .then(async (res) => await res.json())
-        .then(({ thread }) => thread)
-    }
-  )
-  const customer = thread?.customer
   const isSelected = id === Number(params.threadId)
 
-  const messages = thread?.messages ?? []
-  const { createdAt, content } =
-    messages.length > 0
-      ? messages[messages.length - 1]
-      : { createdAt: new Date(), content: 'No messages' }
-  const date = new Date(createdAt)
+  const content =
+    messages.length > 0 ? messages[messages.length - 1].content : 'No messages'
+  const date = new Date(updatedAt)
   const timestamp = isToday(date)
     ? format(date, 'h:mm a')
     : format(date, 'MM/dd/yyyy')

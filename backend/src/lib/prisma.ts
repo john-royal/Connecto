@@ -19,8 +19,14 @@ prisma.$use(async (params, next) => {
 
   if (params.model === 'Message' && params.action === 'create') {
     const message = result as Message
-    await onMessageSent(message)
-    await onNewMessage(message.id, message.threadId)
+    await Promise.all([
+      prisma.thread.update({
+        where: { id: message.threadId },
+        data: { updatedAt: new Date() }
+      }),
+      onMessageSent(message),
+      onNewMessage(message.id, message.threadId)
+    ])
   }
 
   if (params.model === 'Thread' && params.action === 'create') {

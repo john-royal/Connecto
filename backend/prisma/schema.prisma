@@ -25,6 +25,7 @@ model User {
 model Thread {
   id           Int            @id @default(autoincrement())
   createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @default(now()) @updatedAt
   isActive     Boolean        @default(true)
   customer     User           @relation(fields: [customerId], references: [id], onDelete: Cascade)
   customerId   Int

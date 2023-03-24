@@ -1,7 +1,15 @@
 import { useEffect, useState } from 'react'
 import { io, type Socket } from 'socket.io-client'
-import useSWR from 'swr'
+import useSWR, { useSWRConfig } from 'swr'
 import { useAuth, type User } from './auth'
+
+export interface Thread {
+  id: number
+  createdAt: string
+  updatedAt: string
+  customer: { id: number; name: string }
+  messages: Message[]
+}
 
 export interface Message {
   id: string
@@ -10,7 +18,7 @@ export interface Message {
   attachmentUrl?: string
   latitude?: number
   longitude?: number
-  createdAt: Date
+  createdAt: string
 }
 
 export interface MessageInit {
@@ -32,7 +40,7 @@ export interface Chat {
 export function useChat(threadId: number): Chat {
   const { user } = useAuth()
   const [socket, setSocket] = useState<Socket | null>(null)
-  const { data, mutate } = useSWR<{ messages: Message[] }>(
+  const { data, mutate } = useSWR<Thread>(
     `/api/threads/${threadId}`,
     async (url: string) => {
       return await fetch(url)
@@ -48,6 +56,7 @@ export function useChat(threadId: number): Chat {
     latitude: undefined,
     longitude: undefined
   })
+  const swrConfig = useSWRConfig()
   const messages = data?.messages ?? []
 
   useEffect(() => {
@@ -95,13 +104,14 @@ export function useChat(threadId: number): Chat {
     socket.on('message', (message: Message) => {
       console.log('[socket] received message: ', message)
       if (!messages.some((m) => m.id === message.id)) {
-        void mutate(
-          (thread) => ({
+        void mutate((thread?: Thread) => {
+          if (thread == null) return
+          return {
             ...thread,
+            updatedAt: message.createdAt,
             messages: [...(thread?.messages ?? []), message]
-          }),
-          false
-        )
+          }
+        }, false)
       }
     })
     socket.on('typing', (user?: { name: string }) => {
@@ -132,6 +142,12 @@ export function useChat(threadId: number): Chat {
       socket.off('error')
     }
   }, [socket, user, threadId])
+
+  // update swr master list of threads
+  useEffect(() => {
+    if (!socket || !user || !data) return
+    void swrConfig.mutate('/api/threads')
+  }, [socket, user, data])
 
   const sendMessage = async ({
     content,

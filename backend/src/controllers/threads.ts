@@ -23,8 +23,10 @@ export const findAll: RequestHandler = async (req, res) => {
         include: { user: true },
         orderBy: { createdAt: 'asc' }
       }
-    }
+    },
+    orderBy: { updatedAt: 'desc' }
   })
+  res.set('Cache-Control', 'public, max-age=15')
   res.status(200).send({ threads })
 }
 
