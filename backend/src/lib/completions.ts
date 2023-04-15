@@ -116,17 +116,21 @@ const generateReplySuggestions = async (
   - Your suggestions should be relevant to the customer’s query. Avoid being vague, controversial, or off-topic.
   - Your suggestion is a reply. Avoid simply repeating the previous message.
   - Your suggestions should be polite but concise — preferably no more than one sentence.
-  
-  Here is the conversation:`
-  prompt +=
-    messages
-      .map(
-        ({ content, user }) =>
-          `${user.id === 0 ? 'Bot' : user.name} (${
-            user.isAdmin ? 'representative' : 'customer'
-          }): ${content}`
-      )
-      .join('\n') + '\n\n\n'
+  `
+  if (messages.length === 0) {
+    prompt += 'The conversation has not started yet.\n\n\n'
+  } else {
+    prompt += 'Here is the conversation so far:\n\n\n'
+    prompt +=
+      messages
+        .map(
+          ({ content, user }) =>
+            `${user.id === 0 ? 'Bot' : user.name} (${
+              user.isAdmin ? 'representative' : 'customer'
+            }): ${content}`
+        )
+        .join('\n') + '\n\n\n'
+  }
   if (admin) {
     prompt += `Please suggest up to 3 replies that the representative can use.
     Your suggestions must be appropriate for a human customer support representative. Please note that representatives must be able to answer all questions and cannot transfer the customer to another representative.
@@ -136,7 +140,7 @@ const generateReplySuggestions = async (
     Provide your result as a JSON array of strings. For example: ["I’d like to change my shipping address.", "What is your return policy?", "How do I cancel my subscription?"]`
   }
   prompt +=
-    'If you are unable to generate any suggestions, please return an empty array.'
+    '\nIf you are unable to generate any suggestions, please return an empty array. Your response must consist of a single JSON array of strings, with no other characters.'
   try {
     const response = await openai.createChatCompletion({
       model: 'gpt-3.5-turbo',
