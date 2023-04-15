@@ -6,8 +6,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -46,15 +46,10 @@ model Message {
   threadId      Int
 }
 
-enum NotificationType {
-  EMAIL
-  SMS
-}
-
 model Notification {
   id        String           @id @default(uuid())
   createdAt DateTime         @default(now())
-  type      NotificationType
+  type      String
   user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
   thread    Thread           @relation(fields: [threadId], references: [id], onDelete: Cascade)
   userId    Int
